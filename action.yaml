@@ -1,0 +1,102 @@
+name: Setup Bats and Bats libs
+description: A GitHub Action for installing Bats and Bats-libs(support, assert, detik)
+author: Brokenpip3
+branding:
+  color: yellow
+  icon: command
+inputs:
+  support-version:
+    description: "Bats-support version, default to latest"
+    required: false
+    default: "0.3.0"
+  support-path:
+    description: "Bats-support path, default to /usr/lib/bats-support"
+    required: false
+    default: "/usr/lib/bats-support"
+  support-clean:
+    description: "Bats-support: clean temp files"
+    required: false
+    default: true
+  assert-version:
+    description: "Bats-assert version, default to latest"
+    required: false
+    default: "0.2.0"
+  assert-path:
+    description: "Bats-assert path, default to /usr/lib/bats-assert"
+    required: false
+    default: "/usr/lib/bats-assert"
+  assert-clean:
+    description: "Bats-support: clean temp files"
+    required: false
+    default: true
+  detik-version:
+    description: "Bats-detik version, default to latest"
+    required: false
+    default: "1.1.0"
+  detik-path:
+    description: "Bats-assert path, default to /usr/lib/bats-detik"
+    required: false
+    default: "/usr/lib/bats-detik"
+  detik-clean:
+    description: "Bats-support: clean temp files"
+    required: false
+    default: true
+runs:
+  using: composite
+  steps:
+    - name: "Download and install Bats-support"
+      shell: bash
+      run: |
+        VERSION=${{ inputs.support-version }}
+        DESTDIR=${{ inputs.support-path }}
+        TEMPDIR="/tmp/bats-support"
+        url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
+
+        mkdir -p ${TEMPDIR}
+        sudo mkdir -p ${DESTDIR}/src/
+        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
+        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        for fn in src/*.bash; do
+          sudo install -Dm755 $fn \
+             ${DESTDIR}/src/$(basename $fn)
+        done
+        # Cleanup bats-support if required
+        [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+    - name: "Download and install Bats-assert"
+      shell: bash
+      run: |
+        VERSION=${{ inputs.assert-version }}
+        DESTDIR=${{ inputs.assert-path }}
+        TEMPDIR="/tmp/bats-assert"
+        url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
+
+        mkdir -p ${TEMPDIR}
+        sudo mkdir -p ${DESTDIR}/src/
+        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
+        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        for fn in src/*.bash; do
+          sudo install -Dm755 $fn \
+             ${DESTDIR}/src/$(basename $fn)
+        done
+        # Cleanup bats-support if required
+        [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+    - name: "Download and install Bats-detik"
+      shell: bash
+      run: |
+        VERSION=${{ inputs.detik-version }}
+        DESTDIR=${{ inputs.detik-path }}
+        TEMPDIR="/tmp/bats-detik"
+        url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
+
+        mkdir -p ${TEMPDIR}
+        sudo mkdir -p ${DESTDIR}/src/
+        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
+        for fn in lib/*.bash; do
+          sudo install -Dm755 $fn \
+             ${DESTDIR}/src/$(basename $fn)
+        done
+        # Cleanup bats-support if required
+        [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
