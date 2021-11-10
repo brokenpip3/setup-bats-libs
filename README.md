@@ -25,8 +25,40 @@ jobs:
          uses: actions/checkout@v2
        - name: Setup BATS
          uses: mig4/setup-bats@v1
-       - name: Install Bats-libs
-         uses: ./
+       - name: Setup Bats libs
+         uses: brokenpip3/setup-bats-libs@0.0.2
+
 ```
 
 ## Inputs
+
+### Bats-support
+
+* `support-version`: Bats-support version, default to latest
+  * required: `false`
+  * default: `0.3.0`
+
+* `support-path`: Bats-support path
+  * required: `false`
+  * default: `/usr/lib/bats-support`
+
+### Bats-assert
+
+* `assert-version`: Bats-assert version, default to latest
+  * required: `false`
+  * default: `0.2.0`
+
+* `assert-path`: Bats-assert path
+  * required: `false`
+  * default: `/usr/lib/bats-assert`
+
+### Bats-detik
+
+* `detik-version`: Bats-detik version, default to latest
+  *  required: `false`
+  *  default: `1.1.0`
+
+* `detik-path`: Bats-detik path
+  * required: `false`
+  * default: `/usr/lib/bats-detik`
+
