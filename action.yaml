@@ -1,5 +1,5 @@
-name: Setup Bats and Bats libs
-description: A GitHub Action for installing Bats and Bats-libs(support, assert, detik)
+name: Setup Bats libs
+description: A GitHub Action for installing Bats-libs(support, assert, detik)
 author: Brokenpip3
 branding:
   color: yellow
@@ -26,7 +26,7 @@ inputs:
     required: false
     default: "/usr/lib/bats-assert"
   assert-clean:
-    description: "Bats-support: clean temp files"
+    description: "Bats-assert: clean temp files"
     required: false
     default: true
   detik-version:
@@ -34,11 +34,11 @@ inputs:
     required: false
     default: "1.1.0"
   detik-path:
-    description: "Bats-assert path, default to /usr/lib/bats-detik"
+    description: "Bats-detik path, default to /usr/lib/bats-detik"
     required: false
     default: "/usr/lib/bats-detik"
   detik-clean:
-    description: "Bats-support: clean temp files"
+    description: "Bats-detik: clean temp files"
     required: false
     default: true
 runs:
