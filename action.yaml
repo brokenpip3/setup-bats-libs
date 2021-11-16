@@ -96,7 +96,7 @@ runs:
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         for fn in lib/*.bash; do
           sudo install -Dm755 $fn \
-             ${DESTDIR}/src/$(basename $fn)
+             ${DESTDIR}/$(basename $fn)
         done
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
