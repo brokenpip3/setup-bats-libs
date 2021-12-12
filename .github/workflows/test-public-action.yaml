@@ -10,7 +10,7 @@ jobs:
        - name: Setup BATS
          uses: mig4/setup-bats@v1
        - name: Setup Bats libs
-         uses: brokenpip3/setup-bats-libs@0.0.3
+         uses: brokenpip3/setup-bats-libs@0.1.0
          with:
            support-clean: "false"
            assert-clean: "false"
@@ -28,3 +28,7 @@ jobs:
          run: |
           cd /tmp/bats-detik/
           bats tests
+       - name: Execute test to check Bats-file
+         run: |
+          cd /tmp/bats-file/
+          bats test
