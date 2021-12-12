@@ -25,6 +25,6 @@ jobs:
           cd /tmp/bats-assert/
           sed "s:load \"${BATS_TEST_DIRNAME}.*:load \"/usr/lib/bats-assert\":g" test/test_helper.bash
           bats test
-       - name: Execute test to check Bats-detik
+       - name: Execute test to check the installed library
          run: |
            ls -l /usr/lib/bats*
