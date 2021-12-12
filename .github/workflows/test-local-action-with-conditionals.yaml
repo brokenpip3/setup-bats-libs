@@ -1,0 +1,30 @@
+on: [push]
+
+jobs:
+   local_test:
+     runs-on: ubuntu-latest
+     name: Install Bats common libs
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v2
+       - name: Setup BATS
+         uses: mig4/setup-bats@v1
+       - name: Install Bats-libs
+         uses: ./
+         with:
+           support-clean: "false"
+           assert-clean: "false"
+           detik-install: "false"
+           file-install: "false"
+       - name: Execute test to check Bats-support
+         run: |
+          cd /tmp/bats-support/
+          bats test
+       - name: Execute test to check  Bats-assert
+         run: |
+          cd /tmp/bats-assert/
+          sed "s:load \"${BATS_TEST_DIRNAME}.*:load \"/usr/lib/bats-assert\":g" test/test_helper.bash
+          bats test
+       - name: Execute test to check Bats-detik
+         run: |
+           ls -l /usr/lib/bats*

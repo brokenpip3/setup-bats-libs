@@ -1,10 +1,13 @@
 # Setup Bats Libs
 
-GitHub Action to setup the three major [bats](https://github.com/bats-core/bats-core) libs:
+GitHub Action to setup the four major [bats](https://github.com/bats-core/bats-core) libs:
 
 * [bats-support](https://github.com/bats-core/bats-support)
 * [bats-assert](https://github.com/bats-core/bats-assert)
 * [bats-detik](https://github.com/bats-core/bats-detik)
+* [bats-file](https://github.com/bats-core/bats-file)
+
+The action can be also instructed to select which libs that will be installed.
 
 ## How to use it
 
@@ -34,6 +37,10 @@ jobs:
 
 ### Bats-support
 
+* `support-install`: Bats-support installation, default to true
+  * required: `false`
+  * default: `true`
+
 * `support-version`: Bats-support version, default to latest
   * required: `false`
   * default: `0.3.0`
@@ -43,6 +50,10 @@ jobs:
   * default: `/usr/lib/bats-support`
 
 ### Bats-assert
+
+* `assert-install`: Bats-assert installation, default to true
+  * required: `false`
+  * default: `true`
 
 * `assert-version`: Bats-assert version, default to latest
   * required: `false`
@@ -54,6 +65,10 @@ jobs:
 
 ### Bats-detik
 
+* `detik-install`: Bats-detik installation, default to true
+  * required: `false`
+  * default: `true`
+
 * `detik-version`: Bats-detik version, default to latest
   *  required: `false`
   *  default: `1.1.0`
@@ -62,3 +77,16 @@ jobs:
   * required: `false`
   * default: `/usr/lib/bats-detik`
 
+### Bats-file
+
+* `file-install`: Bats-file installation, default to true
+  * required: `false`
+  * default: `true`
+
+* `file-version`: Bats-file version, default to latest
+  * required: `false`
+  * default: `0.3.0`
+
+* `file-path`: Bats-file path
+  * required: `false`
+  * default: `/usr/lib/bats-file`
