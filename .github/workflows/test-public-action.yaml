@@ -15,6 +15,7 @@ jobs:
            support-clean: "false"
            assert-clean: "false"
            detik-clean: "false"
+           file-clean: "false"
        - name: Execute test to check Bats-support
          run: |
           cd /tmp/bats-support/
