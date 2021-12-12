@@ -61,7 +61,7 @@ runs:
   using: composite
   steps:
     - name: "Download and install Bats-support"
-      if: inputs.support-install == "true"
+      if: inputs.support-install == 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.support-version }}
