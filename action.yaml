@@ -5,6 +5,7 @@ branding:
   color: yellow
   icon: command
 inputs:
+  # support
   support-install:
     description: "Bats-support installation, default to true"
     required: false
@@ -21,6 +22,11 @@ inputs:
     description: "Bats-support: clean temp files"
     required: false
     default: true
+  # assert
+  assert-install:
+    description: "Bats-assert installation, default to true"
+    required: false
+    default: true
   assert-version:
     description: "Bats-assert version, default to latest"
     required: false
@@ -33,6 +39,11 @@ inputs:
     description: "Bats-assert: clean temp files"
     required: false
     default: true
+  # detik
+  detik-install:
+    description: "Bats-detik installation, default to true"
+    required: false
+    default: true
   detik-version:
     description: "Bats-detik version, default to latest"
     required: false
@@ -43,6 +54,11 @@ inputs:
     default: "/usr/lib/bats-detik"
   detik-clean:
     description: "Bats-detik: clean temp files"
+    required: false
+    default: true
+  # file
+  file-install:
+    description: "Bats-file installation, default to true"
     required: false
     default: true
   file-version:
@@ -81,6 +97,7 @@ runs:
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Download and install Bats-assert"
+      if: inputs.assert-install == 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.assert-version }}
@@ -100,6 +117,7 @@ runs:
         # Cleanup bats-support if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Download and install Bats-detik"
+      if: inputs.detik-install == 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.detik-version }}
@@ -118,6 +136,7 @@ runs:
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Download and install Bats-file"
+      if: inputs.file-install == 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.file-version }}
