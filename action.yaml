@@ -5,6 +5,10 @@ branding:
   color: yellow
   icon: command
 inputs:
+  support-install:
+    description: "Bats-support installation, default to true"
+    required: false
+    default: true
   support-version:
     description: "Bats-support version, default to latest"
     required: false
@@ -41,10 +45,23 @@ inputs:
     description: "Bats-detik: clean temp files"
     required: false
     default: true
+  file-version:
+    description: "Bats-file version, default to latest"
+    required: false
+    default: "0.3.0"
+  file-path:
+    description: "Bats-file path, default to /usr/lib/bats-file"
+    required: false
+    default: "/usr/lib/bats-file"
+  file-clean:
+    description: "Bats-file: clean temp files"
+    required: false
+    default: true
 runs:
   using: composite
   steps:
     - name: "Download and install Bats-support"
+      if: inputs.support-install == "true"
       shell: bash
       run: |
         VERSION=${{ inputs.support-version }}
@@ -100,3 +117,22 @@ runs:
         done
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+    - name: "Download and install Bats-file"
+      shell: bash
+      run: |
+        VERSION=${{ inputs.file-version }}
+        DESTDIR=${{ inputs.file-path }}
+        TEMPDIR="/tmp/bats-file"
+        url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
+
+        mkdir -p ${TEMPDIR}
+        sudo mkdir -p ${DESTDIR}/src/
+        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
+        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        for fn in src/*.bash; do
+          sudo install -Dm755 $fn \
+             ${DESTDIR}/src/$(basename $fn)
+        done
+        # Cleanup bats-support if required
+        [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0

@@ -15,6 +15,7 @@ jobs:
            support-clean: "false"
            assert-clean: "false"
            detik-clean: "false"
+           file-clean: "false"
        - name: Execute test to check Bats-support
          run: |
           cd /tmp/bats-support/
@@ -27,4 +28,8 @@ jobs:
        - name: Execute test to check Bats-detik
          run: |
           cd /tmp/bats-detik/
+          bats tests
+       - name: Execute test to check Bats-file
+         run: |
+          cd /tmp/bats-file/
           bats tests
