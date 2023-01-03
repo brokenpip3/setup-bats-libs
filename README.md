@@ -35,6 +35,38 @@ jobs:
 
 ## Inputs
 
+The available inputs with their default values are provided below.
+
+``` yaml
+# ...
+       - name: Setup Bats libs
+         uses: brokenpip3/setup-bats-libs@0.1.0
+         with:          
+           support-install: true
+           support-version: 0.3.0
+           support-path: /usr/lib/bats-support
+           assert-install: true
+           assert-version: 0.2.0
+           assert-path: /usr/lib/bats-assert
+           detik-install: true
+           detik-version: 1.1.0
+           detik-path: /usr/lib/bats-detik
+           file-install: true
+           file-version: 0.3.0
+           file-path: /usr/lib/bats-file
+```
+
+If you would like `bats-support` installed within the `./test/bats-support` directory, you
+can configure it as such:
+
+``` yaml
+# ...
+       - name: Setup Bats libs
+         uses: brokenpip3/setup-bats-libs@0.1.0
+         with:          
+           support-path: ${{ github.workspace }}/test/bats-support
+```
+
 ### Bats-support
 
 * `support-install`: Bats-support installation, default to true
