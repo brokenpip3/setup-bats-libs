@@ -92,9 +92,10 @@ runs:
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
       shell: bash
+      env:
+        VERSION: ${{ inputs.support-version }}
+        DESTDIR: ${{ inputs.support-path }}
       run: |
-        VERSION=${{ inputs.support-version }}
-        DESTDIR=${{ inputs.support-path }}
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
@@ -109,8 +110,20 @@ runs:
         done
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+
+    - name: "Set cache for Bats-Assert"
+      uses: actions/cache@v3
+      id: assert-cache
+      env:
+        VERSION: ${{ inputs.support-version }}
+        DESTDIR: ${{ inputs.support-path }}
+      with:
+        path: ${{ inputs.support-path }}
+        key: ${{ runner.os }}-${{ inputs.support-path }}-${{ inputs.support-version }}
+
     - name: "Download and install Bats-assert"
       if: inputs.assert-install == 'true'
+      if: inputs.assert-cache == 'true' && steps.assert-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.assert-version }}
