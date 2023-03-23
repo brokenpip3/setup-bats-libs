@@ -9,6 +9,8 @@ jobs:
          uses: actions/checkout@v2
        - name: Setup BATS
          uses: mig4/setup-bats@v1
+         with:
+           bats-version: 1.9.0
        - name: Setup Bats libs
          uses: brokenpip3/setup-bats-libs@0.1.0
          with:
