@@ -13,7 +13,7 @@ inputs:
   support-version:
     description: "Bats-support version, default to latest"
     required: false
-    default: "v0.3.0"
+    default: "0.3.0"
   support-path:
     description: "Bats-support path, default to /usr/lib/bats-support"
     required: false
@@ -30,7 +30,7 @@ inputs:
   assert-version:
     description: "Bats-assert version, default to latest"
     required: false
-    default: "v2.1.0"
+    default: "2.1.0"
   assert-path:
     description: "Bats-assert path, default to /usr/lib/bats-assert"
     required: false
@@ -77,6 +77,7 @@ runs:
   using: composite
   steps:
     # This could be much easier only if matrix steps will be supported in a composite action
+
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
       if: inputs.support-install == 'true'
@@ -87,6 +88,7 @@ runs:
       with:
         path: ${{ inputs.support-path }}
         key: ${{ runner.os }}-${{ inputs.support-path }}-${{ inputs.support-version }}
+
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
       shell: bash
