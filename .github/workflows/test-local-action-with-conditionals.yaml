@@ -1,33 +1,33 @@
 on: [push]
 
 jobs:
-   local_test:
-     runs-on: ubuntu-latest
-     name: Install Bats common libs
-     steps:
-       - name: Checkout
-         uses: actions/checkout@v2
-       - name: Setup BATS
-         uses: mig4/setup-bats@v1
-         with:
-           bats-version: 1.9.0
-       - name: Setup Bats-libs
-         uses: ./
-         with:
-           support-clean: "false"
-           assert-clean: "false"
-           detik-install: "false"
-           file-install: "false"
-       - name: Execute test to check Bats-support
-         run: |
+  local_test:
+    runs-on: ubuntu-latest
+    env:
+      BATS_LIB_PATH: "/usr/lib/"
+    name: Install Bats common libs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+        with:
+          bats-version: 1.9.0
+      - name: Setup Bats-libs
+        uses: ./
+        with:
+          support-clean: "false"
+          assert-clean: "false"
+          detik-install: "false"
+          file-install: "false"
+      - name: Execute test to check Bats-support
+        run: |
           cd /tmp/bats-support/
           bats test
-       - name: Execute test to check  Bats-assert
-         env:
-           BATS_LIB_PATH: "/usr/lib/"
-         run: |
+      - name: Execute test to check  Bats-assert
+        run: |
           cd /tmp/bats-assert/
           bats test
-       - name: Execute test to check the installed library
-         run: |
-           ls -l /usr/lib/bats*
+      - name: Execute test to check the installed library
+        run: |
+          ls -l ${BATS_LIB_PATH}/bats*
