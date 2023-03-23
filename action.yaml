@@ -122,8 +122,7 @@ runs:
         key: ${{ runner.os }}-${{ inputs.support-path }}-${{ inputs.support-version }}
 
     - name: "Download and install Bats-assert"
-      if: inputs.assert-install == 'true'
-      if: inputs.assert-cache == 'true' && steps.assert-cache.outputs.cache-hit != 'true'
+      if: inputs.assert-install == 'true' && steps.assert-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.assert-version }}
