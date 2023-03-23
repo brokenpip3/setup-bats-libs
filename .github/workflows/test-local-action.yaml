@@ -9,6 +9,8 @@ jobs:
          uses: actions/checkout@v2
        - name: Setup BATS
          uses: mig4/setup-bats@v1
+         with:
+           bats-version: 1.9.0
        - name: Install Bats-libs
          uses: ./
          with:
