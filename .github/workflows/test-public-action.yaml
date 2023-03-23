@@ -4,6 +4,8 @@ jobs:
    public_test:
      runs-on: ubuntu-latest
      name: Install Bats common libs
+     env:
+       BATS_LIB_PATH: "/usr/lib/"
      steps:
        - name: Checkout
          uses: actions/checkout@v2
@@ -25,7 +27,6 @@ jobs:
        - name: Execute test to check  Bats-assert
          run: |
           cd /tmp/bats-assert/
-          sed "s:load \"${BATS_TEST_DIRNAME}.*:load \"/usr/lib/bats-assert\":g" test/test_helper.bash
           bats test
        - name: Execute test to check Bats-detik
          run: |

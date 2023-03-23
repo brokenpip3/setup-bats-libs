@@ -1,37 +1,38 @@
 on: [push]
 
 jobs:
-   local_test:
-     runs-on: ubuntu-latest
-     name: Install Bats common libs
-     steps:
-       - name: Checkout
-         uses: actions/checkout@v2
-       - name: Setup BATS
-         uses: mig4/setup-bats@v1
-         with:
-           bats-version: 1.9.0
-       - name: Install Bats-libs
-         uses: ./
-         with:
-           support-clean: "false"
-           assert-clean: "false"
-           detik-clean: "false"
-           file-clean: "false"
-       - name: Execute test to check Bats-support
-         run: |
-          cd /tmp/bats-support/
-          bats test
-       - name: Execute test to check  Bats-assert
-         run: |
-          cd /tmp/bats-assert/
-          sed "s:load \"${BATS_TEST_DIRNAME}.*:load \"/usr/lib/bats-assert\":g" test/test_helper.bash
-          bats test
-       - name: Execute test to check Bats-detik
-         run: |
-          cd /tmp/bats-detik/
-          bats tests
-       - name: Execute test to check Bats-file
-         run: |
-          cd /tmp/bats-file/
-          echo "Broken atm in a runner context"
+  local_test:
+    runs-on: ubuntu-latest
+    name: Install Bats common libs
+    env:
+      BATS_LIB_PATH: "/usr/lib/"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+        with:
+          bats-version: 1.9.0
+      - name: Install Bats-libs
+        uses: ./
+        with:
+          support-clean: "false"
+          assert-clean: "false"
+          detik-clean: "false"
+          file-clean: "false"
+      - name: Execute test to check Bats-support
+        run: |
+         cd /tmp/bats-support/
+         bats test
+      - name: Execute test to check  Bats-assert
+        run: |
+         cd /tmp/bats-assert/
+         bats test
+      - name: Execute test to check Bats-detik
+        run: |
+         cd /tmp/bats-detik/
+         bats tests
+      - name: Execute test to check Bats-file
+        run: |
+         cd /tmp/bats-file/
+         echo "Broken atm in a runner context"
