@@ -35,4 +35,4 @@ jobs:
       - name: Execute test to check Bats-file
         run: |
          cd /tmp/bats-file/
-         bats tests
+         bats test
