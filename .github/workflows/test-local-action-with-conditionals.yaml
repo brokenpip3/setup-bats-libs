@@ -23,9 +23,10 @@ jobs:
           cd /tmp/bats-support/
           bats test
        - name: Execute test to check  Bats-assert
+         env:
+           BATS_LIB_PATH: "/usr/lib/"
          run: |
           cd /tmp/bats-assert/
-          sed "s:load \"${BATS_TEST_DIRNAME}.*:load \"/usr/lib/bats-assert\":g" test/test_helper.bash
           bats test
        - name: Execute test to check the installed library
          run: |
