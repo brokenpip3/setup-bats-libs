@@ -1,11 +1,11 @@
 on: [push]
 
 jobs:
-  public_test:
+  local_test_inside_home:
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib/bats"
-    name: Install Bats common libs
+      BATS_LIB_PATH: "$HOME/mypath"
+    name: local default inside home
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -14,7 +14,7 @@ jobs:
         with:
           bats-version: 1.9.0
       - name: Setup Bats-libs
-        uses: brokenpip3/setup-bats-libs@main
+        uses: ./
         with:
           support-clean: "false"
           assert-clean: "false"
@@ -33,16 +33,18 @@ jobs:
           cd /tmp/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
+        # Currently the bats-file tests are broken
+        # in gh runner env
         continue-on-error: true
         run: |
           cd /tmp/bats-file/
           bats test
-  public_test_trigger_cache:
-    # Run the test again to trigger the cache
+  local_test_inside_workspace:
+    needs: [local_test_inside_home]
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib/bats"
-    name: Install Bats common libs
+      BATS_LIB_PATH: "${{ github.workspace }}/test"
+    name: local default inside home
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -51,7 +53,7 @@ jobs:
         with:
           bats-version: 1.9.0
       - name: Setup Bats-libs
-        uses: brokenpip3/setup-bats-libs@0.1.0
+        uses: ./
         with:
           support-clean: "false"
           assert-clean: "false"
@@ -70,6 +72,8 @@ jobs:
           cd /tmp/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
+        # Currently the bats-file tests are broken
+        # in gh runner env
         continue-on-error: true
         run: |
           cd /tmp/bats-file/

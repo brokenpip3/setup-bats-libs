@@ -87,6 +87,8 @@ runs:
           echo "BATS_LIB_PATH was ${BATS_LIB_PATH}, symlinked to $HOME/.local/share/bats"
         else
           echo "_BATS_LIB_PATH=${BATS_LIB_PATH}" >> $GITHUB_ENV
+          # In case is not present
+          mkdir -p ${BATS_LIB_PATH}
           echo "BATS_LIB_PATH is ${BATS_LIB_PATH}"
         fi
 
@@ -105,7 +107,7 @@ runs:
       env:
         VERSION: ${{ inputs.support-version }}
       run: |
-        DESTDIR=${{ env._BATS_LIB_PATH }}/bats-support
+        DESTDIR="${{ env._BATS_LIB_PATH }}/bats-support"
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
