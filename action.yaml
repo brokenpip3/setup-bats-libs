@@ -74,22 +74,20 @@ runs:
     # and make a symbolic link to BATS_LIB_PATH if is outside the home dir.
     - name: "Check if BATS_LIB_PATH is outside HOME"
       shell: bash
-      env:
-        BATS_LIB_PATH: ${{ inputs.bats-lib-path }}
       run: |
-        if [[ ! "${BATS_LIB_PATH}" == "$HOME"* ]]; then
+        if [[ ! "${{ inputs.bats-lib-path }}" == "$HOME"* ]]; then
           sudo mkdir -p ${{ env.BATS_LIB_PATH }}
           mkdir -p $HOME/.local/share
           sudo ln -s ${{ env.BATS_LIB_PATH }} $HOME/.local/share/bats
           sudo chown 1001:1001 $HOME/.local/share/bats
           ls -l $HOME/.local/share/
           echo "_BATS_LIB_PATH='$HOME/.local/share/bats'" >> $GITHUB_ENV
-          echo "BATS_LIB_PATH was ${BATS_LIB_PATH}, symlinked to $HOME/.local/share/bats"
+          echo "BATS_LIB_PATH was ${{ inputs.bats-lib-path }}, symlinked to $HOME/.local/share/bats"
         else
-          echo "_BATS_LIB_PATH=${BATS_LIB_PATH}" >> $GITHUB_ENV
+          echo "_BATS_LIB_PATH=${{ inputs.bats-lib-path }}" >> $GITHUB_ENV
           # In case is not present
-          mkdir -p ${BATS_LIB_PATH}
-          echo "BATS_LIB_PATH is ${BATS_LIB_PATH}"
+          mkdir -p ${{ inputs.bats-lib-path }}
+          echo "BATS_LIB_PATH is ${{ inputs.bats-lib-path }}"
         fi
 
     # This could be much easier if only matrix steps will be supported in a composite action

@@ -16,6 +16,7 @@ jobs:
       - name: Setup Bats-libs
         uses: ./
         with:
+          bats-lib-path: "$HOME/mypath"
           support-clean: "false"
           assert-clean: "false"
           detik-clean: "false"
@@ -55,6 +56,7 @@ jobs:
       - name: Setup Bats-libs
         uses: ./
         with:
+          bats-lib-path: "${{ github.workspace }}/test"
           support-clean: "false"
           assert-clean: "false"
           detik-clean: "false"
