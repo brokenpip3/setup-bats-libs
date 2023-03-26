@@ -80,7 +80,7 @@ runs:
         BATS_LIB_PATH: ${{ inputs.bats-lib-path }}
       run: |
         if [[ ! "${BATS_LIB_PATH}" == "$HOME"* ]]; then
-          mkdir -p .local/share/
+          mkdir -p .local/share/bats
           sudo ln -s ${BATS_LIB_PATH} .local/share/bats
           chown ${whoami}:${whoami} .local/share/bats
           echo "_BATS_LIB_PATH=.local/share/bats" >> $GITHUB_ENV
