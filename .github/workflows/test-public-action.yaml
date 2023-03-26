@@ -39,6 +39,7 @@ jobs:
           bats test
   public_test_trigger_cache:
     # Run the test again to trigger the cache
+    needs: [public_test]
     runs-on: ubuntu-latest
     env:
       BATS_LIB_PATH: "/usr/lib/bats"

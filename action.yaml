@@ -107,7 +107,7 @@ runs:
       env:
         VERSION: ${{ inputs.support-version }}
       run: |
-        DESTDIR="${{ env._BATS_LIB_PATH }}/bats-support"
+        DESTDIR=${{ env._BATS_LIB_PATH }}/bats-support
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
