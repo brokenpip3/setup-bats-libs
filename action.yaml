@@ -65,30 +65,32 @@ inputs:
 runs:
   using: composite
   steps:
-    # By default BATS_LIB_PATH is /usr/lib/bats and the github runner user
+    # By default BATS_LIB_PATH is /usr/lib/bats but the github runner user
     # does not have the grants to write outside the home directory,
     # you need to use sudo to write under /usr/lib.
     # Also the cache will not work if needs to use sudo to restore the file.
     # To support the migration from the previous version of this action
     # we are going to change the default local path to XDG .local
-    # and make a symbolic link to /usr/lib since most of the distro
-    # use that path for the bats libraries
+    # and make a symbolic link to BATS_LIB_PATH if is outside the home dir.
     - name: "Check if BATS_LIB_PATH is outside HOME"
       shell: bash
-      if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
       env:
         BATS_LIB_PATH: ${{ inputs.bats-lib-path }}
       run: |
         if [[ ! "${BATS_LIB_PATH}" == "$HOME"* ]]; then
-          mkdir -p .local/share/bats
-          sudo ln -s ${BATS_LIB_PATH} .local/share/bats
-          chown ${whoami}:${whoami} .local/share/bats
-          echo "_BATS_LIB_PATH=.local/share/bats" >> $GITHUB_ENV
+          sudo mkdir -p ${{ env.BATS_LIB_PATH }}
+          mkdir -p $HOME/.local/share
+          sudo ln -s ${{ env.BATS_LIB_PATH }} $HOME/.local/share/bats
+          sudo chown 1001:1001 $HOME/.local/share/bats
+          ls -l $HOME/.local/share/
+          echo "_BATS_LIB_PATH='$HOME/.local/share/bats'" >> $GITHUB_ENV
+          echo "BATS_LIB_PATH was ${BATS_LIB_PATH}, symlinked to $HOME/.local/share/bats"
         else
           echo "_BATS_LIB_PATH=${BATS_LIB_PATH}" >> $GITHUB_ENV
+          echo "BATS_LIB_PATH is ${BATS_LIB_PATH}"
         fi
 
-    # This could be much easier only if matrix steps will be supported in a composite action
+    # This could be much easier if only matrix steps will be supported in a composite action
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
       if: inputs.support-install == 'true'
@@ -102,8 +104,8 @@ runs:
       shell: bash
       env:
         VERSION: ${{ inputs.support-version }}
-        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-support
       run: |
+        DESTDIR=${{ env._BATS_LIB_PATH }}/bats-support
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
@@ -116,6 +118,7 @@ runs:
           install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
+        echo "Bats support successfully installed, version: ${{ inputs.support-version }}"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
@@ -134,6 +137,7 @@ runs:
         VERSION: ${{ inputs.assert-version }}
         DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-assert
       run: |
+        DESTDIR=${{ env._BATS_LIB_PATH }}/bats-assert
         TEMPDIR="/tmp/bats-assert"
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
 
@@ -141,11 +145,13 @@ runs:
         mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
+        ls -l ${TEMPDIR}/load.bash
         install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
+        echo "Bats assert successfully installed, version: ${{ inputs.assert-version }}"
         # Cleanup bats-assert if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
@@ -162,8 +168,8 @@ runs:
       shell: bash
       env:
         VERSION: ${{ inputs.file-version }}
-        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-file
       run: |
+        DESTDIR=${{ env._BATS_LIB_PATH }}/bats-file
         TEMPDIR="/tmp/bats-file"
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
 
@@ -176,6 +182,7 @@ runs:
           install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
+        echo "Bats file successfully installed, version: ${{ inputs.file-version }}"
         # Cleanup bats-file if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
@@ -192,9 +199,9 @@ runs:
       shell: bash
       env:
         VERSION: ${{ inputs.detik-version }}
-        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-detik
       run: |
         TEMPDIR="/tmp/bats-detik"
+        DESTDIR=${{ env._BATS_LIB_PATH }}/bats-detik
         url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
@@ -205,5 +212,6 @@ runs:
           install -Dm755 $fn \
              ${DESTDIR}/$(basename $fn)
         done
+        echo "Bats detik successfully installed, version: ${{ inputs.detik-version }}"
         # Cleanup bats-detik if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0

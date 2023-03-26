@@ -3,7 +3,7 @@ on: [push]
 jobs:
   local_test:
     runs-on: ubuntu-latest
-    name: Install Bats common libs
+    name: local default
     env:
       BATS_LIB_PATH: "/usr/lib/bats"
     steps:

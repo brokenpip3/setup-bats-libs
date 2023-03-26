@@ -1,11 +1,11 @@
 on: [push]
 
 jobs:
-  local_test:
+  local_test_options:
     runs-on: ubuntu-latest
     env:
       BATS_LIB_PATH: "/usr/lib/bats"
-    name: Install Bats common libs
+    name: local with options
     steps:
       - name: Checkout
         uses: actions/checkout@v2
