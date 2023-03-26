@@ -1,10 +1,15 @@
 name: Setup Bats libs
-description: A GitHub Action for installing Bats-libs(support, assert, detik)
+description: A GitHub Action for installing Bats-libs (support, assert, detik, file)
 author: Brokenpip3
 branding:
   color: yellow
   icon: command
 inputs:
+  # generic
+  bats-lib-path:
+    description: "Default localtion for bats libs, this will be exposed to bats binary with the well-know BATS_LIB_PATH"
+    required: false
+    default: "/usr/lib/bats"
   # support
   support-install:
     description: "Bats-support installation, default to true"
@@ -14,10 +19,6 @@ inputs:
     description: "Bats-support version, default to latest"
     required: false
     default: "0.3.0"
-  support-path:
-    description: "Bats-support path, default to /usr/lib/bats-support"
-    required: false
-    default: "/usr/lib/bats-support"
   support-clean:
     description: "Bats-support: clean temp files"
     required: false
@@ -31,10 +32,6 @@ inputs:
     description: "Bats-assert version, default to latest"
     required: false
     default: "2.1.0"
-  assert-path:
-    description: "Bats-assert path, default to /usr/lib/bats-assert"
-    required: false
-    default: "/usr/lib/bats-assert"
   assert-clean:
     description: "Bats-assert: clean temp files"
     required: false
@@ -48,10 +45,6 @@ inputs:
     description: "Bats-detik version, default to latest"
     required: false
     default: "1.1.0"
-  detik-path:
-    description: "Bats-detik path, default to /usr/lib/bats-detik"
-    required: false
-    default: "/usr/lib/bats-detik"
   detik-clean:
     description: "Bats-detik: clean temp files"
     required: false
@@ -65,10 +58,6 @@ inputs:
     description: "Bats-file version, default to latest"
     required: false
     default: "0.3.0"
-  file-path:
-    description: "Bats-file path, default to /usr/lib/bats-file"
-    required: false
-    default: "/usr/lib/bats-file"
   file-clean:
     description: "Bats-file: clean temp files"
     required: false
@@ -76,107 +65,145 @@ inputs:
 runs:
   using: composite
   steps:
-    # This could be much easier only if matrix steps will be supported in a composite action
+    # By default BATS_LIB_PATH is /usr/lib/bats and the github runner user
+    # does not have the grants to write outside the home directory,
+    # you need to use sudo to write under /usr/lib.
+    # Also the cache will not work if needs to use sudo to restore the file.
+    # To support the migration from the previous version of this action
+    # we are going to change the default local path to XDG .local
+    # and make a symbolic link to /usr/lib since most of the distro
+    # use that path for the bats libraries
+    - name: "Check if BATS_LIB_PATH is outside HOME"
+      shell: bash
+      if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
+      env:
+        BATS_LIB_PATH: ${{ inputs.bats-lib-path }}
+      run: |
+        if [[ ! "${BATS_LIB_PATH}" == "$HOME"* ]]; then
+          mkdir -p .local/share/
+          sudo ln -s ${BATS_LIB_PATH} .local/share/bats
+          chown ${whoami}:${whoami} .local/share/bats
+          echo "_BATS_LIB_PATH=.local/share/bats" >> $GITHUB_ENV
+        else
+          echo "_BATS_LIB_PATH=${BATS_LIB_PATH}" >> $GITHUB_ENV
+        fi
 
+    # This could be much easier only if matrix steps will be supported in a composite action
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
       if: inputs.support-install == 'true'
       id: support-cache
-      env:
-        VERSION: ${{ inputs.support-version }}
-        DESTDIR: ${{ inputs.support-path }}
       with:
-        path: ${{ inputs.support-path }}
-        key: ${{ runner.os }}-${{ inputs.support-path }}-${{ inputs.support-version }}
+        path: ${{ env._BATS_LIB_PATH }}/bats-support
+        key: ${{ runner.os }}-${{ env._BATS_LIB_PATH }}-bats-support-${{ inputs.support-version }}
 
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
       shell: bash
       env:
         VERSION: ${{ inputs.support-version }}
-        DESTDIR: ${{ inputs.support-path }}
+        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-support
       run: |
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        # Archlinux style, except that we are not in a fakeroot env
+        install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          sudo install -Dm755 $fn \
+          install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
-    - name: "Set cache for Bats-Assert"
+    - name: "Set cache for Bats-assert"
       uses: actions/cache@v3
+      if: inputs.assert-install == 'true'
       id: assert-cache
-      env:
-        VERSION: ${{ inputs.support-version }}
-        DESTDIR: ${{ inputs.support-path }}
       with:
-        path: ${{ inputs.support-path }}
-        key: ${{ runner.os }}-${{ inputs.support-path }}-${{ inputs.support-version }}
+        path: ${{ env._BATS_LIB_PATH }}/bats-assert
+        key: ${{ runner.os }}-${{ env._BATS_LIB_PATH }}-bats-assert-${{ inputs.assert-version }}
 
     - name: "Download and install Bats-assert"
       if: inputs.assert-install == 'true' && steps.assert-cache.outputs.cache-hit != 'true'
       shell: bash
+      env:
+        VERSION: ${{ inputs.assert-version }}
+        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-assert
       run: |
-        VERSION=${{ inputs.assert-version }}
-        DESTDIR=${{ inputs.assert-path }}
         TEMPDIR="/tmp/bats-assert"
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        # Archlinux style, except that we are not in a fakeroot env
+        install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          sudo install -Dm755 $fn \
+          install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
-        # Cleanup bats-support if required
+        # Cleanup bats-assert if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-    - name: "Download and install Bats-detik"
-      if: inputs.detik-install == 'true'
-      shell: bash
-      run: |
-        VERSION=${{ inputs.detik-version }}
-        DESTDIR=${{ inputs.detik-path }}
-        TEMPDIR="/tmp/bats-detik"
-        url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
 
-        mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        for fn in lib/*.bash; do
-          sudo install -Dm755 $fn \
-             ${DESTDIR}/$(basename $fn)
-        done
-        # Cleanup bats-support if required
-        [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-    - name: "Download and install Bats-file"
+    - name: "Set cache for Bats-file"
+      uses: actions/cache@v3
       if: inputs.file-install == 'true'
+      id: file-cache
+      with:
+        path: ${{ env._BATS_LIB_PATH }}/bats-file
+        key: ${{ runner.os }}-${{ env._BATS_LIB_PATH }}-bats-file-${{ inputs.file-version }}
+
+    - name: "Download and install Bats-file"
+      if: inputs.file-install == 'true' && steps.file-cache.outputs.cache-hit != 'true'
       shell: bash
+      env:
+        VERSION: ${{ inputs.file-version }}
+        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-file
       run: |
-        VERSION=${{ inputs.file-version }}
-        DESTDIR=${{ inputs.file-path }}
         TEMPDIR="/tmp/bats-file"
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        # Archlinux style, except that we are not in a fakeroot env
+        install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          sudo install -Dm755 $fn \
+          install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
-        # Cleanup bats-support if required
+        # Cleanup bats-file if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+
+    - name: "Set cache for Bats-detik"
+      uses: actions/cache@v3
+      if: inputs.detik-install == 'true'
+      id: detik-cache
+      with:
+        path: ${{ env._BATS_LIB_PATH }}/bats-detik
+        key: ${{ runner.os }}-${{ env._BATS_LIB_PATH }}-bats-detik-${{ inputs.detik-version }}
+
+    - name: "Download and install Bats-detik"
+      if: inputs.detik-install == 'true' && steps.detik-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        VERSION: ${{ inputs.detik-version }}
+        DESTDIR: ${{ env._BATS_LIB_PATH }}/bats-detik
+      run: |
+        TEMPDIR="/tmp/bats-detik"
+        url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
+
+        mkdir -p ${TEMPDIR}
+        mkdir -p ${DESTDIR}/src/
+        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        # Archlinux style, except that we are not in a fakeroot env
+        for fn in lib/*.bash; do
+          install -Dm755 $fn \
+             ${DESTDIR}/$(basename $fn)
+        done
+        # Cleanup bats-detik if required
+        [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
