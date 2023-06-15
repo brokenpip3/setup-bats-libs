@@ -101,7 +101,7 @@ runs:
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-support
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
-        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
+        [[ ${SUDO_NEEDED} == "true" ]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
         ${ARG} mkdir -p ${DESTDIR}/src/
@@ -134,7 +134,7 @@ runs:
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-assert
         TEMPDIR="/tmp/bats-assert"
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
-        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
+        [[ ${SUDO_NEEDED} == "true" ]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
         ${ARG} mkdir -p ${DESTDIR}/src/
@@ -167,7 +167,7 @@ runs:
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-file
         TEMPDIR="/tmp/bats-file"
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
-        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
+        [[ ${SUDO_NEEDED} == "true" ]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
         ${ARG} mkdir -p ${DESTDIR}/src/
@@ -199,7 +199,7 @@ runs:
         TEMPDIR="/tmp/bats-detik"
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-detik
         url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
-        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
+        [[ "${{ env.SUDO_NEEDED }}" == "true" ]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
         ${ARG} mkdir -p ${DESTDIR}/src/
