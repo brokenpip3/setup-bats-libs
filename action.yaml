@@ -9,7 +9,7 @@ inputs:
   bats-lib-path:
     description: "Default localtion for bats libs, this will be exposed to bats binary with the well-know BATS_LIB_PATH"
     required: false
-    default: "/usr/lib/bats"
+    default: "$HOME/.local/share/bats"
   # support
   support-install:
     description: "Bats-support installation, default to true"
@@ -76,25 +76,17 @@ runs:
       shell: bash
       run: |
         if [[ ! "${{ inputs.bats-lib-path }}" == "$HOME"* ]]; then
-          sudo mkdir -p ${{ inputs.bats-lib-path }}
-          mkdir -p $HOME/.local/share
-          sudo ln -s ${{ inputs.bats-lib-path }} $HOME/.local/share/bats
-          sudo chown 1001:1001 $HOME/.local/share/bats
-          ls -l $HOME/.local/share/
-          echo "BATS_LIB_PATH=${{ inputs.inputs.bats-lib-path }}" >> $GITHUB_ENV
-          echo "BATS_LIB_PATH was ${{ inputs.bats-lib-path }}, symlinked to $HOME/.local/share/bats"
+          echo "SUDO_NEEDED=true" >> $GITHUB_ENV
         else
-          echo "BATS_LIB_PATH=${{ inputs.bats-lib-path }}" >> $GITHUB_ENV
-          # In case is not present
-          mkdir -p ${{ inputs.bats-lib-path }}
-          echo "BATS_LIB_PATH is ${{ inputs.bats-lib-path }}"
+          echo "SUDO_NEEDED=false" >> $GITHUB_ENV
         fi
-        mkdir -p $BATS_LIB_PATH/bats-{support,assert,detik,file}
+        mkdir -p ${{ inputs.bats-lib-path }}
+        #mkdir -p $BATS_LIB_PATH/bats-{support,assert,detik,file}
 
     # This could be much easier if only matrix steps will be supported in a composite action
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
-      if: inputs.support-install == 'true'
+      if: inputs.support-install == 'true' && env.SUDO_NEEDED == 'false'
       id: support-cache
       with:
         path: ${{ env.BATS_LIB_PATH }}/bats-support
@@ -109,14 +101,15 @@ runs:
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-support
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
+        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
-        mkdir -p ${DESTDIR}/src/
+        ${ARG} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
-        install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${ARG} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          install -Dm755 $fn \
+          ${ARG} install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats support successfully installed, version: ${{ inputs.support-version }}"
@@ -125,7 +118,7 @@ runs:
 
     - name: "Set cache for Bats-assert"
       uses: actions/cache@v3
-      if: inputs.assert-install == 'true'
+      if: inputs.assert-install == 'true' && env.SUDO_NEEDED == 'false'
       id: assert-cache
       with:
         path: ${{ env.BATS_LIB_PATH }}/bats-assert
@@ -141,15 +134,16 @@ runs:
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-assert
         TEMPDIR="/tmp/bats-assert"
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
+        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
-        mkdir -p ${DESTDIR}/src/
+        ${ARG} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
         ls -l ${TEMPDIR}/load.bash
-        install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${ARG} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          install -Dm755 $fn \
+          ${ARG} install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats assert successfully installed, version: ${{ inputs.assert-version }}"
@@ -158,7 +152,7 @@ runs:
 
     - name: "Set cache for Bats-file"
       uses: actions/cache@v3
-      if: inputs.file-install == 'true'
+      if: inputs.file-install == 'true' && env.SUDO_NEEDED == 'false'
       id: file-cache
       with:
         path: ${{ env.BATS_LIB_PATH }}/bats-file
@@ -173,14 +167,15 @@ runs:
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-file
         TEMPDIR="/tmp/bats-file"
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
+        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
-        mkdir -p ${DESTDIR}/src/
+        ${ARG} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
-        install -Dm755 load.bash ${DESTDIR}/load.bash
+        ${ARG} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          install -Dm755 $fn \
+          ${ARG} install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats file successfully installed, version: ${{ inputs.file-version }}"
@@ -189,7 +184,7 @@ runs:
 
     - name: "Set cache for Bats-detik"
       uses: actions/cache@v3
-      if: inputs.detik-install == 'true'
+      if: inputs.detik-install == 'true' && env.SUDO_NEEDED == 'false'
       id: detik-cache
       with:
         path: ${{ env.BATS_LIB_PATH }}/bats-detik
@@ -204,13 +199,14 @@ runs:
         TEMPDIR="/tmp/bats-detik"
         DESTDIR=${{ env.BATS_LIB_PATH }}/bats-detik
         url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
+        [[ SUDO_NEEDED == true]] && ARG="sudo" || ARG=""
 
         mkdir -p ${TEMPDIR}
-        mkdir -p ${DESTDIR}/src/
+        ${ARG} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env
         for fn in lib/*.bash; do
-          install -Dm755 $fn \
+          ${ARG} install -Dm755 $fn \
              ${DESTDIR}/$(basename $fn)
         done
         echo "Bats detik successfully installed, version: ${{ inputs.detik-version }}"
