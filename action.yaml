@@ -75,7 +75,7 @@ runs:
     - name: "Check if BATS_LIB_PATH is outside HOME"
       shell: bash
       run: |
-        if [[ ! "${{ inputs.bats-lib-path }}" == "$HOME"* ]]; then
+        if [[ "${{ inputs.bats-lib-path }}" == "$HOME"* ]]; then
           echo "SUDO_NEEDED=true" >> $GITHUB_ENV
         else
           echo "SUDO_NEEDED=false" >> $GITHUB_ENV
@@ -98,7 +98,8 @@ runs:
       env:
         VERSION: ${{ inputs.support-version }}
       run: |
-        DESTDIR=${{ env.BATS_LIB_PATH }}/bats-support
+        set -x
+        DESTDIR=$(realpath ${{ env.BATS_LIB_PATH }}/bats-support)
         TEMPDIR="/tmp/bats-support"
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
         [[ ${SUDO_NEEDED} == "true" ]] && ARG="sudo" || ARG=""
@@ -129,9 +130,9 @@ runs:
       shell: bash
       env:
         VERSION: ${{ inputs.assert-version }}
-        DESTDIR: ${{ env.BATS_LIB_PATH }}/bats-assert
       run: |
-        DESTDIR=${{ env.BATS_LIB_PATH }}/bats-assert
+        set -x
+        DESTDIR=$(realpath ${{ env.BATS_LIB_PATH }}/bats-assert)
         TEMPDIR="/tmp/bats-assert"
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
         [[ ${SUDO_NEEDED} == "true" ]] && ARG="sudo" || ARG=""
@@ -164,7 +165,8 @@ runs:
       env:
         VERSION: ${{ inputs.file-version }}
       run: |
-        DESTDIR=${{ env.BATS_LIB_PATH }}/bats-file
+        set -x
+        DESTDIR=$(realpath ${{ env.BATS_LIB_PATH }}/bats-file)
         TEMPDIR="/tmp/bats-file"
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
         [[ ${SUDO_NEEDED} == "true" ]] && ARG="sudo" || ARG=""
@@ -196,8 +198,9 @@ runs:
       env:
         VERSION: ${{ inputs.detik-version }}
       run: |
+        set -x
         TEMPDIR="/tmp/bats-detik"
-        DESTDIR=${{ env.BATS_LIB_PATH }}/bats-detik
+        DESTDIR=$(realpath ${{ env.BATS_LIB_PATH }}/bats-detik)
         url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
         [[ "${{ env.SUDO_NEEDED }}" == "true" ]] && ARG="sudo" || ARG=""
 

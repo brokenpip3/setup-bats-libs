@@ -4,7 +4,7 @@ jobs:
   local_test_inside_home:
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "$HOME/mypath"
+      BATS_LIB_PATH: "./mypath"
     name: local default inside home
     steps:
       - name: Checkout
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Bats-libs
         uses: ./
         with:
-          bats-lib-path: "$HOME/mypath"
+          bats-lib-path: "mypath"
           support-clean: "false"
           assert-clean: "false"
           detik-clean: "false"
