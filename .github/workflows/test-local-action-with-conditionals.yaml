@@ -12,7 +12,7 @@ jobs:
       - name: Setup BATS
         uses: mig4/setup-bats@v1
         with:
-          bats-version: 1.9.0
+          bats-version: 1.10.0
       - name: Setup Bats-libs
         uses: ./
         with:
@@ -28,6 +28,3 @@ jobs:
         run: |
           cd /tmp/bats-assert/
           bats test
-      - name: Execute test to check the installed library
-        run: |
-          ls -l ${BATS_LIB_PATH}/bats*
