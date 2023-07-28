@@ -14,7 +14,7 @@ setup() {
 @test "1: Testing file existence" {
   run ls testing/example
   assert_success
-  assert_file_exists
+  [ -f "testing/example" ]
   assert_success
 }
 
@@ -40,41 +40,41 @@ setup() {
 @test "4: Testing file size" {
   run du -b testing/example | cut -f1
   assert_success
-  assert_output 0
+  assert_output --partial "0"
   assert_size_zero testing/example
 }
 
 #bats test_tags=github:true
 @test "5: Testing directory creation" {
   run mkdir testing/newdir
-  assert_dir_exists testing/newdir
+  [ -d "testing/newdir" ]
   assert_success
 }
 
 #bats test_tags=github:true
 @test "6: Testing file creation inside directory" {
   run touch testing/newdir/newfile
-  assert_file_exists testing/newdir/newfile
+  [ -f "testing/newdir/newfile" ]
   assert_success
 }
 
 #bats test_tags=github:true
 @test "7: Testing file deletion" {
   run rm testing/newdir/newfile
-  assert_file_not_exists testing/newdir/newfile
+    [ ! -f "testing/newdir/newfile" ]
   assert_success
 }
 
 #bats test_tags=github:true
 @test "8: Testing directory deletion" {
   run rmdir testing/newdir
-  assert_dir_not_exists testing/newdir
+  [ ! -d "testing/newdir" ]
   assert_success
 }
 
 #bats test_tags=github:true
 @test "9: Testing file deletion" {
   run rm testing/example
-  assert_file_not_exists testing/example
+  [ ! -f "testing/example" ]
   assert_success
 }
