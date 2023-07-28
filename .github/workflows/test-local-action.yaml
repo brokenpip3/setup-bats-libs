@@ -4,7 +4,7 @@ jobs:
   local_test:
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib/bats"
+      BATS_LIB_PATH: "/usr/lib"
       TERM: xterm
     name: local default
     steps:
