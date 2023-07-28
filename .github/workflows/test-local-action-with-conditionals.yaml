@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BATS_LIB_PATH: "/usr/lib"
+      TERM: xterm
     name: local with options
     steps:
       - name: Checkout
