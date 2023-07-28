@@ -39,6 +39,9 @@ jobs:
         run: |
           cd /tmp/bats-file/
           bats test
+      - name: Execute example tests
+        run:
+          bats -T -p tests
   local_test_trigger_cache:
     needs: [local_test]
     runs-on: ubuntu-latest
