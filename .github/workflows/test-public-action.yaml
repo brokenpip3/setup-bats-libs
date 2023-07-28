@@ -4,7 +4,7 @@ jobs:
   public_test:
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib/bats"
+      BATS_LIB_PATH: "/usr/lib"
     name: Install Bats common libs
     steps:
       - name: Checkout
@@ -45,7 +45,7 @@ jobs:
     needs: [public_test]
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib/bats"
+      BATS_LIB_PATH: "/usr/lib"
     name: Install Bats common libs
     steps:
       - name: Checkout

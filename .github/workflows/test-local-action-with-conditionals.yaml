@@ -4,7 +4,7 @@ jobs:
   local_test_options:
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib/bats"
+      BATS_LIB_PATH: "/usr/lib"
     name: local with options
     steps:
       - name: Checkout

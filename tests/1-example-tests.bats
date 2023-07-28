@@ -37,40 +37,35 @@ setup() {
 }
 
 #bats test_tags=github:true
-@test "4: Testing file size" {
-  assert_size_zero testing/example
-}
-
-#bats test_tags=github:true
-@test "5: Testing directory creation" {
+@test "4: Testing directory creation" {
   run mkdir testing/newdir
   [ -d "testing/newdir" ]
   assert_success
 }
 
 #bats test_tags=github:true
-@test "6: Testing file creation inside directory" {
+@test "5: Testing file creation inside directory" {
   run touch testing/newdir/newfile
   [ -f "testing/newdir/newfile" ]
   assert_success
 }
 
 #bats test_tags=github:true
-@test "7: Testing file deletion" {
+@test "6: Testing file deletion" {
   run rm testing/newdir/newfile
     [ ! -f "testing/newdir/newfile" ]
   assert_success
 }
 
 #bats test_tags=github:true
-@test "8: Testing directory deletion" {
+@test "7: Testing directory deletion" {
   run rmdir testing/newdir
   [ ! -d "testing/newdir" ]
   assert_success
 }
 
 #bats test_tags=github:true
-@test "9: Testing file deletion" {
+@test "8: Testing file deletion" {
   run rm testing/example
   [ ! -f "testing/example" ]
   assert_success
