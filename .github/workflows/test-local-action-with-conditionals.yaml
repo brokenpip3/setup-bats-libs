@@ -19,7 +19,7 @@ jobs:
           support-clean: "false"
           assert-clean: "false"
           detik-install: "false"
-          file-install: "false"
+          file-install: "true"
       - name: Execute test to check Bats-support
         run: |
           cd /tmp/bats-support/
@@ -28,3 +28,6 @@ jobs:
         run: |
           cd /tmp/bats-assert/
           bats test
+      - name: Execute example tests
+        run:
+          bats -T -p tests

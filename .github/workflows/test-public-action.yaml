@@ -37,6 +37,9 @@ jobs:
         run: |
           cd /tmp/bats-file/
           bats test
+      - name: Execute example tests
+        run:
+          bats -T -p tests
   public_test_trigger_cache:
     # Run the test again to eventually trigger the cache in the future
     needs: [public_test]
