@@ -19,7 +19,7 @@ jobs:
         with:
           support-clean: "false"
           assert-clean: "false"
-          detik-install: "false"
+          detik-install: "true"
           file-install: "true"
       - name: Execute test to check Bats-support
         run: |
