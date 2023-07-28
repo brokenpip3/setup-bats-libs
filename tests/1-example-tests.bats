@@ -38,7 +38,7 @@ setup() {
 
 #bats test_tags=github:true
 @test "4: Testing file size" {
-  run du -b testing/example | cut -f1
+  run ls -l testing/example |cut -d ' ' -f5
   assert_success
   assert_output --partial "0"
   assert_size_zero testing/example
