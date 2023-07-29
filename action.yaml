@@ -13,7 +13,6 @@ inputs:
   bats-version:
     description: "Bats version, default to latest (1.10.0 atm)"
     required: false
-    default: "1.10.0"
   # support
   support-install:
     description: "Bats-support installation, default to true"
@@ -118,19 +117,13 @@ runs:
             ${LIBDIR}/$(basename ${fn})
         done
 
-        ls -l ${DESTDIR}
-        ls -l $HOME/.local/
-        ls -l ${LIBDIR}
-
         install -Dm755 bin/bats "${DESTDIR}/bats"
-
         install -Dm755 lib/bats-core/* -t "${LIBDIR}"
 
         echo "Bats v$VERSION installed in $DESTDIR"
         rm -rf ${TEMPDIR} || exit 0
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
-        echo "$GITHUB_PATH"
 
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true'
