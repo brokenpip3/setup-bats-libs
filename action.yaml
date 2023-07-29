@@ -89,6 +89,7 @@ runs:
       shell: bash
       run: |
         # In $HOME to avoid sudo requirements that eventually will be removed for the library as well
+        set -x
         VERSION=${{ inputs.bats-version }}
         DESTDIR="$HOME/.local/bin"
         LIBDIR="$HOME/.local/share/bats"
@@ -105,6 +106,7 @@ runs:
         mkdir -p ${DESTDIR}
 
         curl -sL ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        set +x
 
         # Archlinux style, except that we are not in a fakeroot env
         # https://gitlab.archlinux.org/archlinux/packaging/packages/bash-bats/-/blob/main/PKGBUILD
