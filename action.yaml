@@ -98,7 +98,7 @@ runs:
 
         # From https://github.com/fluxcd/flux2/blob/44d69d6fc0c353e79c1bad021a4aca135033bce8/action/action.yml#L35
         if [[ -z "$VERSION" ]] || [[ "$VERSION" = "latest" ]]; then
-          VERSION=$(curl -fsSL ${URL}/releases/latest | grep tag_name | cut -d '"' -f 4)
+          VERSION=$(curl -fsSL https://api.github.com/repos/bats-core/bats-core/releases/latest | grep tag_name | cut -d '"' -f 4)
         fi
         [[ $VERSION = v* ]] && VERSION="${VERSION:1}"
 
