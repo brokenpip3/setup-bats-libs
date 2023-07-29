@@ -119,8 +119,10 @@ runs:
         done
 
         ls -l ${DESTDIR}
+        ls -l $HOME/.local/
         ls -l ${LIBDIR}
 
+        cp bin/bats "${DESTDIR}/bats"
         install -Dm755 bin/bats "${DESTDIR}/bats"
 
         install -Dm755 lib/bats-core/* -t "${LIBDIR}"
