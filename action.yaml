@@ -109,9 +109,9 @@ runs:
 
         # Archlinux style, except that we are not in a fakeroot env
         # https://gitlab.archlinux.org/archlinux/packaging/packages/bash-bats/-/blob/main/PKGBUILD
-        sed -i 's|BATS_ROOT/libexec/bats-core/bats|BATS_ROOT/'"${LIBDIR}"'|g' bin/bats
-        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/'"${LIBDIR}"'|g' libexec/bats-core/*
-        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/'"${LIBDIR}"'|g' lib/bats-core/*
+        sed -i 's|BATS_ROOT/libexec/bats-core/bats|BATS_ROOT/share/bats|g' bin/bats
+        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/share/bats|g' libexec/bats-core/*
+        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/share/bats|g' lib/bats-core/*
 
         for fn in libexec/bats-core/*; do
           install -Dm755 ${fn} \
@@ -131,6 +131,7 @@ runs:
         rm -rf ${TEMPDIR} || exit 0
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
+        echo "$GITHUB_PATH"
 
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true'
