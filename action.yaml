@@ -30,7 +30,7 @@ inputs:
   assert-version:
     description: "Bats-assert version, default to latest"
     required: false
-    default: "0.2.0"
+    default: "2.1.0"
   assert-path:
     description: "Bats-assert path, default to /usr/lib/bats-assert"
     required: false
@@ -47,7 +47,7 @@ inputs:
   detik-version:
     description: "Bats-detik version, default to latest"
     required: false
-    default: "1.1.0"
+    default: "1.2.0"
   detik-path:
     description: "Bats-detik path, default to /usr/lib/bats-detik"
     required: false
@@ -87,13 +87,14 @@ runs:
 
         mkdir -p ${TEMPDIR}
         sudo mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         sudo install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           sudo install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
+        echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Download and install Bats-assert"
@@ -107,13 +108,14 @@ runs:
 
         mkdir -p ${TEMPDIR}
         sudo mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         sudo install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           sudo install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
+        echo "Bats Assert v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Download and install Bats-detik"
@@ -127,12 +129,13 @@ runs:
 
         mkdir -p ${TEMPDIR}
         sudo mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         for fn in lib/*.bash; do
           sudo install -Dm755 $fn \
              ${DESTDIR}/$(basename $fn)
         done
+        echo "Bats Detik v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Download and install Bats-file"
@@ -146,12 +149,13 @@ runs:
 
         mkdir -p ${TEMPDIR}
         sudo mkdir -p ${DESTDIR}/src/
-        curl -sL ${url} | tar xvz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+        curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         sudo install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
           sudo install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
+        echo "Bats File v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
