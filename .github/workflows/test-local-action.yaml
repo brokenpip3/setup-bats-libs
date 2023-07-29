@@ -48,14 +48,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BATS_LIB_PATH: "/usr/lib/bats"
-    name: local default
+      TERM: xterm
+    name: local default cache
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup BATS
         uses: mig4/setup-bats@v1
         with:
-          bats-version: 1.9.0
+          bats-version: 1.10.0
       - name: Setup Bats-libs
         uses: ./
         with:
