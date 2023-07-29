@@ -110,8 +110,8 @@ runs:
         # Archlinux style, except that we are not in a fakeroot env
         # https://gitlab.archlinux.org/archlinux/packaging/packages/bash-bats/-/blob/main/PKGBUILD
         sed -i 's|BATS_ROOT/libexec/bats-core/bats|BATS_ROOT/share/bats/bats|g' bin/bats
-        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/share/bats|g' libexec/bats-core/*
-        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/share/bats|g' lib/bats-core/*
+        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/share/bats/|g' libexec/bats-core/*
+        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/share/bats/|g' lib/bats-core/*
 
         for fn in libexec/bats-core/*; do
           install -Dm755 ${fn} \
@@ -122,7 +122,6 @@ runs:
         ls -l $HOME/.local/
         ls -l ${LIBDIR}
 
-        cp bin/bats "${DESTDIR}/bats"
         install -Dm755 bin/bats "${DESTDIR}/bats"
 
         install -Dm755 lib/bats-core/* -t "${LIBDIR}"
