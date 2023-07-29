@@ -1,10 +1,19 @@
-name: Setup Bats libs
-description: A GitHub Action for installing Bats-libs(support, assert, detik)
+name: Setup Bats and libs
+description: A GitHub Action for installing Bats and Bats-libs(support, assert, detik, file)
 author: Brokenpip3
 branding:
   color: yellow
   icon: command
 inputs:
+  # Bats binary
+  bats-install:
+    description: "Bats installation, default to true"
+    required: false
+    default: true
+  bats-version:
+    description: "Bats version, default to latest (1.10.0 atm)"
+    required: false
+    default: "1.10.0"
   # support
   support-install:
     description: "Bats-support installation, default to true"
@@ -76,6 +85,48 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: "Download and install Bats"
+      if: inputs.bats-install == 'true'
+      shell: bash
+      run: |
+        # In $HOME to avoid sudo requirements that eventually will be removed for the library as well
+        VERSION=${{ inputs.bats-version }}
+        DESTDIR="$HOME/.local/bin"
+        LIBDIR="$HOME/.local/share/bats"
+        TEMPDIR="/tmp/bats"
+        URL="https://github.com/bats-core/bats-core/"
+
+        # From https://github.com/fluxcd/flux2/blob/44d69d6fc0c353e79c1bad021a4aca135033bce8/action/action.yml#L35
+        if [[ -z "$VERSION" ]] || [[ "$VERSION" = "latest" ]]; then
+          VERSION=$(curl -fsSL -H "Authorization: token ${TOKEN}" ${URL}/releases/latest | grep tag_name | cut -d '"' -f 4)
+        fi
+        [[ $VERSION = v* ]] && VERSION="${VERSION:1}"
+
+        mkdir -p ${TEMPDIR}
+        sudo mkdir -p ${DESTDIR}/src/
+
+        curl -sL ${URL}/archive/refs/tags/v${VERSION}.tar.gz | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
+
+        # Archlinux style, except that we are not in a fakeroot env
+        # https://gitlab.archlinux.org/archlinux/packaging/packages/bash-bats/-/blob/main/PKGBUILD
+        sed -i 's|BATS_ROOT/libexec/bats-core/bats|BATS_ROOT/'"${LIBDIR}"'|g' bin/bats
+        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/'"${LIBDIR}"'|g' libexec/bats-core/*
+        sed -i 's|BATS_ROOT/lib/bats-core/|BATS_ROOT/'"${LIBDIR}"'|g' lib/bats-core/*
+
+        for fn in libexec/bats-core/*; do
+          install -Dm755 ${fn} \
+            ${LIBDIR}/$(basename ${fn})
+        done
+
+        install -Dm755 bin/bats "${DESTDIR}/bats"
+
+        install -Dm755 lib/bats-core/* -t "${LIBDIR}"
+
+        echo "Bats v$VERSION installed in $DESTDIR"
+        rm -rf ${TEMPDIR} || exit 0
+
+        echo "$DESTDIR" >> "$GITHUB_PATH"
+
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true'
       shell: bash
