@@ -118,6 +118,9 @@ runs:
             ${LIBDIR}/$(basename ${fn})
         done
 
+        ls -l ${DESTDIR}
+        ls -l ${LIBDIR}
+
         install -Dm755 bin/bats "${DESTDIR}/bats"
 
         install -Dm755 lib/bats-core/* -t "${LIBDIR}"
