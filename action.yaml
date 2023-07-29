@@ -90,8 +90,8 @@ runs:
       if: inputs.bats-install == 'true'
       id: bats-cache
       with:
-        path: $HOME/.local/bin/bats
-        key: ${{ runner.os }}-${{ env.BATS_LIB_PATH }}-bats
+        path: "$HOME/.local/share/bats"
+        key: ${{ runner.os }}-bats
     - name: "Download and install Bats"
       if: inputs.bats-install == 'true' && steps.bats-cache.outputs.cache-hit != 'true'
       shell: bash
