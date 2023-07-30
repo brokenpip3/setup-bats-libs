@@ -10,11 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup BATS
-        uses: mig4/setup-bats@v1
-        with:
-          bats-version: 1.10.0
-      - name: Setup Bats-libs
+      - name: Setup Bats and Bats-libs
         uses: brokenpip3/setup-bats-libs@main
         with:
           support-clean: "false"
@@ -51,11 +47,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup BATS
-        uses: mig4/setup-bats@v1
-        with:
-          bats-version: 1.9.0
-      - name: Setup Bats-libs
+      - name: Setup Bats and Bats-libs
         uses: brokenpip3/setup-bats-libs@0.1.0
         with:
           support-clean: "false"

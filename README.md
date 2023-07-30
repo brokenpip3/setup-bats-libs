@@ -1,20 +1,15 @@
 # Setup Bats Libs
 
-GitHub Action to setup the four major [bats](https://github.com/bats-core/bats-core) libs:
+This GitHub Action installs [Bats](https://github.com/bats-core/bats-core) and the four major bats libraries:
 
 * [bats-support](https://github.com/bats-core/bats-support)
 * [bats-assert](https://github.com/bats-core/bats-assert)
 * [bats-detik](https://github.com/bats-core/bats-detik)
 * [bats-file](https://github.com/bats-core/bats-file)
 
-The action can be also instructed to select which libs that will be installed.
+The action can be also instructed to select which libraries to install.
 
 ## How to use it
-
-Can be used in duo with [setup-bats](https://github.com/mig4/setup-bats) action
-to setup all the bats libs you need for your CI jobs.
-
-An example:
 
 ``` yaml
 on: [push]
@@ -22,103 +17,62 @@ on: [push]
 jobs:
    my_test:
      runs-on: ubuntu-latest
-     name: Install Bats common libs
+     name: Install Bats and bats libs
      steps:
        - name: Checkout
          uses: actions/checkout@v2
-       - name: Setup BATS
-         uses: mig4/setup-bats@v1
-       - name: Setup Bats libs
-         uses: brokenpip3/setup-bats-libs@0.1.0
+       - name: Setup Bats and bats libs
+         uses: brokenpip3/setup-bats-libs@1.0.0
+```
 
+## Libraries Path
+
+For each of the Bats libraries, you can choose to install them in the default location (`/usr/lib/bats-<lib-name>`) or specify a custom path.
+
+For example, if you want to install `bats-support` in the `./test/bats-support` directory, you can configure it as follows:
+
+
+``` yaml
+# ...
+       - name: Setup Bats and Bats libs
+         uses: brokenpip3/setup-bats-libs@0.1.0
+         with:
+           support-path: ${{ github.workspace }}/test/bats-support
 ```
 
 ## Inputs
 
-The available inputs with their default values are provided below.
+| Key              | Default | Required | Description                                    |
+|------------------|---------|----------|------------------------------------------------|
+| bats-install     | `true`    | false    | Bats installation, cache supported              |
+| bats-version     | `latest`  | false    | Bats version   |
+| support-install  | `true`    | false    | Bats-support installation      |
+| support-version  | `0.3.0`   | false    | Bats-support version       |
+| support-path     | `/usr/lib/bats-support` | false | Bats-support path |
+| support-clean    | `true`    | false    | Bats-support: clean temp files                  |
+| assert-install   | `true`    | false    | Bats-assert installation      |
+| assert-version   | `2.1.0`   | false    | Bats-assert version         |
+| assert-path      | `/usr/lib/bats-assert` | false | Bats-assert path |
+| assert-clean     | `true`    | false    | Bats-assert: clean temp files                   |
+| detik-install    | `true`   | false    | Bats-detik installation        |
+| detik-version    | `1.2.0`   | false    | Bats-detik version        |
+| detik-path       | `/usr/lib/bats-detik` | false | Bats-detik path |
+| detik-clean      | `true`    | false    | Bats-detik: clean temp files                    |
+| file-install     | `true`    | false    | Bats-file installation     |
+| file-version     | `0.3.0`   | false    | Bats-file version            |
+| file-path        | `/usr/lib/bats-file` | false | Bats-file path   |
+| file-clean       | `true`    | false    | Bats-file: clean temp files                     |
 
-``` yaml
-# ...
-       - name: Setup Bats libs
-         uses: brokenpip3/setup-bats-libs@0.1.0
-         with:          
-           support-install: true
-           support-version: 0.3.0
-           support-path: /usr/lib/bats-support
-           assert-install: true
-           assert-version: 0.2.0
-           assert-path: /usr/lib/bats-assert
-           detik-install: true
-           detik-version: 1.1.0
-           detik-path: /usr/lib/bats-detik
-           file-install: true
-           file-version: 0.3.0
-           file-path: /usr/lib/bats-file
-```
+## TODO
 
-If you would like `bats-support` installed within the `./test/bats-support` directory, you
-can configure it as such:
+* [X] Add more tests
 
-``` yaml
-# ...
-       - name: Setup Bats libs
-         uses: brokenpip3/setup-bats-libs@0.1.0
-         with:          
-           support-path: ${{ github.workspace }}/test/bats-support
-```
+* [X] Add Bats binary
 
-### Bats-support
+* [X] Add cache for bats binary
 
-* `support-install`: Bats-support installation, default to true
-  * required: `false`
-  * default: `true`
+* [X] Better Readme
 
-* `support-version`: Bats-support version, default to latest
-  * required: `false`
-  * default: `0.3.0`
+* [ ] Remove sudo in case of bats libs installed in $HOME
 
-* `support-path`: Bats-support path
-  * required: `false`
-  * default: `/usr/lib/bats-support`
-
-### Bats-assert
-
-* `assert-install`: Bats-assert installation, default to true
-  * required: `false`
-  * default: `true`
-
-* `assert-version`: Bats-assert version, default to latest
-  * required: `false`
-  * default: `0.2.0`
-
-* `assert-path`: Bats-assert path
-  * required: `false`
-  * default: `/usr/lib/bats-assert`
-
-### Bats-detik
-
-* `detik-install`: Bats-detik installation, default to true
-  * required: `false`
-  * default: `true`
-
-* `detik-version`: Bats-detik version, default to latest
-  *  required: `false`
-  *  default: `1.1.0`
-
-* `detik-path`: Bats-detik path
-  * required: `false`
-  * default: `/usr/lib/bats-detik`
-
-### Bats-file
-
-* `file-install`: Bats-file installation, default to true
-  * required: `false`
-  * default: `true`
-
-* `file-version`: Bats-file version, default to latest
-  * required: `false`
-  * default: `0.3.0`
-
-* `file-path`: Bats-file path
-  * required: `false`
-  * default: `/usr/lib/bats-file`
+* [ ] Add cache for bats libs
