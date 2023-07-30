@@ -52,7 +52,6 @@ jobs:
       - name: Setup Bats and Bats libs
         uses: ./
         with:
-          bats-version: 1.9.0
           support-clean: "false"
           assert-clean: "false"
           detik-clean: "false"
