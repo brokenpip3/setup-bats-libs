@@ -1,4 +1,10 @@
-on: [push]
+name: "Test local action"
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    tags: ["*"]
 
 jobs:
   local_test:

@@ -1,4 +1,10 @@
-on: [push]
+name: "Test local with conditionals"
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    tags: ["*"]
 
 jobs:
   local_test_options:
