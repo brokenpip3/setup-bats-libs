@@ -48,7 +48,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Bats and Bats-libs
-        uses: brokenpip3/setup-bats-libs@0.1.0
+        uses: brokenpip3/setup-bats-libs@main
         with:
           support-clean: "false"
           assert-clean: "false"
