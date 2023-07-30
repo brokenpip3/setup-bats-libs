@@ -1,4 +1,12 @@
-on: [push]
+name: "Test public from main"
+on:
+  workflow_dispatch:
+  pull_request:
+  release:
+    types: [published]
+  push:
+    branches: ["main"]
+    tags: ["*"]
 
 jobs:
   public_test:
