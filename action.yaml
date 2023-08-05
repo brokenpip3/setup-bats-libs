@@ -145,17 +145,19 @@ runs:
         url="https://github.com/bats-core/bats-support/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        # Archlinux style, except that we are not in a fakeroot env
+        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          sudo install -Dm755 $fn \
+          ${CMD} install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+
     - name: "Download and install Bats-assert"
       if: inputs.assert-install == 'true'
       shell: bash
@@ -166,17 +168,19 @@ runs:
         url="https://github.com/bats-core/bats-assert/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        # Archlinux style, except that we are not in a fakeroot env
+        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          sudo install -Dm755 $fn \
+          ${CMD} install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats Assert v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+
     - name: "Download and install Bats-detik"
       if: inputs.detik-install == 'true'
       shell: bash
@@ -187,16 +191,18 @@ runs:
         url="https://github.com/bats-core/bats-detik/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
         # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
         for fn in lib/*.bash; do
-          sudo install -Dm755 $fn \
+          ${CMD} install -Dm755 $fn \
              ${DESTDIR}/$(basename $fn)
         done
         echo "Bats Detik v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+
     - name: "Download and install Bats-file"
       if: inputs.file-install == 'true'
       shell: bash
@@ -207,12 +213,13 @@ runs:
         url="https://github.com/bats-core/bats-file/archive/refs/tags/v${VERSION}.tar.gz"
 
         mkdir -p ${TEMPDIR}
-        sudo mkdir -p ${DESTDIR}/src/
+        [[ "${DESTDIR}" == "$HOME"* ]] && CMD="" || CMD="sudo"
+        ${CMD} mkdir -p ${DESTDIR}/src/
         curl -sL ${url} | tar xz -C ${TEMPDIR} --strip-components 1 && cd ${TEMPDIR}
-        # Archlinux style, except that we are not in a fakeroot env so we need to use sudo
-        sudo install -Dm755 load.bash ${DESTDIR}/load.bash
+        # Archlinux style, except that we are not in a fakeroot env
+        ${CMD} install -Dm755 load.bash ${DESTDIR}/load.bash
         for fn in src/*.bash; do
-          sudo install -Dm755 $fn \
+          ${CMD} install -Dm755 $fn \
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats File v$VERSION installed in $DESTDIR"
