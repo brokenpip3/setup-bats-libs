@@ -52,7 +52,7 @@ jobs:
         run:
           bats -T -p tests
   local_test_home_trigger_cache:
-    needs: [local_test]
+    needs: [local_test_home]
     runs-on: ubuntu-latest
     env:
       BATS_LIB_PATH: "/usr/lib"
