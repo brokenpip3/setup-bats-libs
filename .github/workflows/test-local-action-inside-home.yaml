@@ -22,13 +22,13 @@ jobs:
         uses: ./
         with:
           support-clean: "false"
-          support-path: "${{ github.workspace }}/tests"
+          support-path: "${{ github.workspace }}/tests/bats-support"
           assert-clean: "false"
-          assert-path: "${{ github.workspace }}/tests"
+          assert-path: "${{ github.workspace }}/tests/bats-assert"
           detik-clean: "false"
-          detik-path: "${{ github.workspace }}/tests"
+          detik-path: "${{ github.workspace }}/tests/bats-detik"
           file-clean: "false"
-          file-path: "${{ github.workspace }}/tests"
+          file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
         run: |
           cd /tmp/bats-support/
