@@ -35,6 +35,7 @@ jobs:
           bats test
       - name: Execute test to check  Bats-assert
         run: |
+          ls -l $BATS_LIB_PATH/
           cd /tmp/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
