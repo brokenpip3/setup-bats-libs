@@ -135,8 +135,16 @@ runs:
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
 
-    - name: "Download and install Bats-support"
+    - name: "Set cache for Bats-support"
+      uses: actions/cache@v3
       if: inputs.support-install == 'true'
+      id: support-cache
+      with:
+        path: ${{ inputs.support-path }}
+        key: ${{ runner.os }}-bats-support
+
+    - name: "Download and install Bats-support"
+      if: inputs.support-install == 'true'&& steps.support-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.support-version }}

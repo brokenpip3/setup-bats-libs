@@ -56,7 +56,7 @@ jobs:
     needs: [local_test_home]
     runs-on: ubuntu-latest
     env:
-      BATS_LIB_PATH: "/usr/lib"
+      BATS_LIB_PATH: "${{ github.workspace }}/tests"
       TERM: xterm
     name: local default cache
     steps:
@@ -66,9 +66,13 @@ jobs:
         uses: ./
         with:
           support-clean: "false"
+          support-path: "${{ github.workspace }}/tests/bats-support"
           assert-clean: "false"
+          assert-path: "${{ github.workspace }}/tests/bats-assert"
           detik-clean: "false"
+          detik-path: "${{ github.workspace }}/tests/bats-detik"
           file-clean: "false"
+          file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
         run: |
           cd /tmp/bats-support/
