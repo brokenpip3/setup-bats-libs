@@ -88,6 +88,15 @@ outputs:
   support-installed:
     description: "True/False if bats-support has been installed"
     value: ${{ steps.support-install.outputs.installed }}
+  assert-installed:
+    description: "True/False if bats-assert has been installed"
+    value: ${{ steps.assert-install.outputs.installed }}
+  detik-installed:
+    description: "True/False if bats-detik has been installed"
+    value: ${{ steps.detik-install.outputs.installed }}
+  file-installed:
+    description: "True/False if bats-file has been installed"
+    value: ${{ steps.file-install.outputs.installed }}
 
 runs:
   using: composite
@@ -156,6 +165,7 @@ runs:
 
     - name: "Download and install Bats-support"
       if: inputs.support-install == 'true'&& steps.support-cache.outputs.cache-hit != 'true'
+      id: support-install
       shell: bash
       run: |
         VERSION=${{ inputs.support-version }}
@@ -176,10 +186,19 @@ runs:
         echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "support-installed=True" >> "$GITHUB_OUTPUT"
+        echo "installed=True" >> "$GITHUB_OUTPUT"
+
+    - name: "Set cache for Bats-assert"
+      uses: actions/cache@v3
+      if: inputs.assert-install == 'true'
+      id: assert-cache
+      with:
+        path: ${{ inputs.support-path }}
+        key: ${{ runner.os }}-bats-assert
 
     - name: "Download and install Bats-assert"
-      if: inputs.assert-install == 'true'
+      if: inputs.assert-install == 'true' && steps.assert-cache.outputs.cache-hit != 'true'
+      id: assert-install
       shell: bash
       run: |
         VERSION=${{ inputs.assert-version }}
@@ -202,8 +221,16 @@ runs:
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
         echo "installed=True" >> "$GITHUB_OUTPUT"
 
-    - name: "Download and install Bats-detik"
+    - name: "Set cache for Bats-detik"
+      uses: actions/cache@v3
       if: inputs.detik-install == 'true'
+      id: detik-cache
+      with:
+        path: ${{ inputs.support-path }}
+        key: ${{ runner.os }}-bats-detik
+
+    - name: "Download and install Bats-detik"
+      if: inputs.detik-install == 'true' && steps.detik-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.detik-version }}
@@ -225,8 +252,17 @@ runs:
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
         echo "installed=True" >> "$GITHUB_OUTPUT"
 
+    - name: "Set cache for Bats-file"
+      uses: actions/cache@v3
+      if: inputs.file-install == 'true'
+      id: file-cache
+      with:
+        path: ${{ inputs.support-path }}
+        key: ${{ runner.os }}-bats-file
+
     - name: "Download and install Bats-file"
       if: inputs.file-install == 'true'
+      if: inputs.file-install == 'true' && steps.file-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         VERSION=${{ inputs.file-version }}
