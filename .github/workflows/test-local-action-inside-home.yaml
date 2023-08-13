@@ -35,15 +35,18 @@ jobs:
           cd /tmp/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
+        if: steps.setup-bats-libs.outputs.assert-installed == 'true'
         run: |
           ls -l $BATS_LIB_PATH/
           cd /tmp/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
+        if: steps.setup-bats-libs.outputs.detik-installed == 'true'
         run: |
           cd /tmp/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
+        if: steps.setup-bats-libs.outputs.file-installed == 'true'
         # Currently the bats-file tests are broken
         # in gh runner env
         continue-on-error: true
@@ -81,17 +84,24 @@ jobs:
           cd /tmp/bats-support/
           bats test
       - name: Execute test to check  Bats-assert
+        if: steps.setup-bats-libs.outputs.assert-installed == 'true'
         run: |
+          ls -l $BATS_LIB_PATH/
           cd /tmp/bats-assert/
           bats test
       - name: Execute test to check Bats-detik
+        if: steps.setup-bats-libs.outputs.detik-installed == 'true'
         run: |
           cd /tmp/bats-detik/
           bats tests
       - name: Execute test to check Bats-file
+        if: steps.setup-bats-libs.outputs.file-installed == 'true'
         # Currently the bats-file tests are broken
         # in gh runner env
         continue-on-error: true
         run: |
           cd /tmp/bats-file/
           bats test
+      - name: Execute example tests
+        run:
+          bats -T -p tests
