@@ -75,7 +75,7 @@ jobs:
           file-clean: "false"
           file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
-        if: steps.setup-bats-libs.support-installed = 'True'
+        if: steps.setup-bats-libs.support-installed == 'True'
         run: |
           cd /tmp/bats-support/
           bats test
