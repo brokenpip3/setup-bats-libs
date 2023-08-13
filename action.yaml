@@ -81,6 +81,14 @@ inputs:
     description: "Bats-file: clean temp files"
     required: false
     default: true
+outputs:
+  bats-installed:
+    description: "True/False if bats has been installed"
+    value: ${{ (steps.bats-install.outputs.installed == '') }}
+  support-installed:
+    description: "True/False if bats-support has been installed"
+    value: ${{ (steps.support-install.outputs.installed == '') }}
+
 runs:
   using: composite
   steps:
@@ -94,8 +102,10 @@ runs:
           ~/.local/share/bats
           ~/.local/bin/bats
         key: ${{ runner.os }}-bats
+
     - name: "Download and install Bats"
       if: inputs.bats-install == 'true' && steps.bats-cache.outputs.cache-hit != 'true'
+      id: bats-install
       shell: bash
       run: |
         # In $HOME to avoid sudo requirements that eventually will be removed for the library as well
@@ -134,6 +144,7 @@ runs:
         rm -rf ${TEMPDIR} || exit 0
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
+        echo "installed=True" >> "$GITHUB_OUTPUT"
 
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
@@ -165,6 +176,7 @@ runs:
         echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+        echo "installed=True" >> "$GITHUB_OUTPUT"
 
     - name: "Download and install Bats-assert"
       if: inputs.assert-install == 'true'
@@ -188,6 +200,7 @@ runs:
         echo "Bats Assert v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+        echo "installed=True" >> "$GITHUB_OUTPUT"
 
     - name: "Download and install Bats-detik"
       if: inputs.detik-install == 'true'
@@ -210,6 +223,7 @@ runs:
         echo "Bats Detik v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+        echo "installed=True" >> "$GITHUB_OUTPUT"
 
     - name: "Download and install Bats-file"
       if: inputs.file-install == 'true'
@@ -233,3 +247,4 @@ runs:
         echo "Bats File v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
+        echo "installed=True" >> "$GITHUB_OUTPUT"

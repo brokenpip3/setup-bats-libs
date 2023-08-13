@@ -63,6 +63,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Bats and Bats libs
+        id: setup-bats-libs
         uses: ./
         with:
           support-clean: "false"
@@ -74,6 +75,7 @@ jobs:
           file-clean: "false"
           file-path: "${{ github.workspace }}/tests/bats-file"
       - name: Execute test to check Bats-support
+        if: steps.setup-bats-libs.support-installed = 'True'
         run: |
           cd /tmp/bats-support/
           bats test
