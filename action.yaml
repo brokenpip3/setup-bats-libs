@@ -84,10 +84,10 @@ inputs:
 outputs:
   bats-installed:
     description: "True/False if bats has been installed"
-    value: ${{ (steps.bats-install.outputs.installed == '') }}
+    value: ${{ steps.bats-install.outputs.installed }}
   support-installed:
     description: "True/False if bats-support has been installed"
-    value: ${{ (steps.support-install.outputs.installed == '') }}
+    value: ${{ steps.support-install.outputs.installed }}
 
 runs:
   using: composite
