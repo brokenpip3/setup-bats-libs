@@ -193,7 +193,7 @@ runs:
       if: inputs.assert-install == 'true'
       id: assert-cache
       with:
-        path: ${{ inputs.support-path }}
+        path: ${{ inputs.assert-path }}
         key: ${{ runner.os }}-bats-assert
 
     - name: "Download and install Bats-assert"
@@ -226,7 +226,7 @@ runs:
       if: inputs.detik-install == 'true'
       id: detik-cache
       with:
-        path: ${{ inputs.support-path }}
+        path: ${{ inputs.detik-path }}
         key: ${{ runner.os }}-bats-detik
 
     - name: "Download and install Bats-detik"
@@ -258,7 +258,7 @@ runs:
       if: inputs.file-install == 'true'
       id: file-cache
       with:
-        path: ${{ inputs.support-path }}
+        path: ${{ inputs.file-path }}
         key: ${{ runner.os }}-bats-file
 
     - name: "Download and install Bats-file"
