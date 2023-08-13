@@ -144,7 +144,7 @@ runs:
         rm -rf ${TEMPDIR} || exit 0
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
-        echo "installed=True" >> "$GITHUB_OUTPUT"
+        echo "bats-installed=True" >> "$GITHUB_OUTPUT"
 
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
@@ -176,7 +176,7 @@ runs:
         echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "installed=True" >> "$GITHUB_OUTPUT"
+        echo "support-installed=True" >> "$GITHUB_OUTPUT"
 
     - name: "Download and install Bats-assert"
       if: inputs.assert-install == 'true'
