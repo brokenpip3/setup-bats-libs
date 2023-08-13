@@ -231,6 +231,7 @@ runs:
 
     - name: "Download and install Bats-detik"
       if: inputs.detik-install == 'true' && steps.detik-cache.outputs.cache-hit != 'true'
+      id: detik-install
       shell: bash
       run: |
         VERSION=${{ inputs.detik-version }}
@@ -261,8 +262,8 @@ runs:
         key: ${{ runner.os }}-bats-file
 
     - name: "Download and install Bats-file"
-      if: inputs.file-install == 'true'
       if: inputs.file-install == 'true' && steps.file-cache.outputs.cache-hit != 'true'
+      id: file-install
       shell: bash
       run: |
         VERSION=${{ inputs.file-version }}
