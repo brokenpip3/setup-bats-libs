@@ -144,7 +144,7 @@ runs:
         rm -rf ${TEMPDIR} || exit 0
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
-        echo "bats-installed=True" >> "$GITHUB_OUTPUT"
+        echo "installed=True" >> $GITHUB_OUTPUT
 
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
