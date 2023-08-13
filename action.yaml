@@ -153,7 +153,7 @@ runs:
         rm -rf ${TEMPDIR} || exit 0
 
         echo "$DESTDIR" >> "$GITHUB_PATH"
-        echo "installed=True" >> $GITHUB_OUTPUT
+        echo "installed=true" >> $GITHUB_OUTPUT
 
     - name: "Set cache for Bats-support"
       uses: actions/cache@v3
@@ -186,7 +186,7 @@ runs:
         echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "installed=True" >> "$GITHUB_OUTPUT"
+        echo "installed=true" >> "$GITHUB_OUTPUT"
 
     - name: "Set cache for Bats-assert"
       uses: actions/cache@v3
@@ -219,7 +219,7 @@ runs:
         echo "Bats Assert v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "installed=True" >> "$GITHUB_OUTPUT"
+        echo "installed=true" >> "$GITHUB_OUTPUT"
 
     - name: "Set cache for Bats-detik"
       uses: actions/cache@v3
@@ -251,7 +251,7 @@ runs:
         echo "Bats Detik v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "installed=True" >> "$GITHUB_OUTPUT"
+        echo "installed=true" >> "$GITHUB_OUTPUT"
 
     - name: "Set cache for Bats-file"
       uses: actions/cache@v3
@@ -284,4 +284,4 @@ runs:
         echo "Bats File v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "installed=True" >> "$GITHUB_OUTPUT"
+        echo "installed=true" >> "$GITHUB_OUTPUT"
