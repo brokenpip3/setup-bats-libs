@@ -184,9 +184,9 @@ runs:
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats Support v$VERSION installed in $DESTDIR"
+        echo "support-installed=true" >> $GITHUB_OUTPUT
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "support-installed=true" >> $GITHUB_OUTPUT
 
     - name: "Set cache for Bats-assert"
       uses: actions/cache@v3
