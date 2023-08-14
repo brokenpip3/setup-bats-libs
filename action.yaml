@@ -84,19 +84,19 @@ inputs:
 outputs:
   bats-installed:
     description: "True/False if bats has been installed"
-    value: ${{ steps.bats-install.outputs.installed }}
+    value: ${{ (steps.bats-install.outputs.installed == 'true') }}
   support-installed:
     description: "True/False if bats-support has been installed"
-    value: ${{ steps.support-install.outputs.installed }}
+    value: ${{ (steps.support-install.outputs.installed == 'true') }}
   assert-installed:
     description: "True/False if bats-assert has been installed"
-    value: ${{ steps.assert-install.outputs.installed }}
+    value: ${{ (steps.assert-install.outputs.installed == 'true') }}
   detik-installed:
     description: "True/False if bats-detik has been installed"
-    value: ${{ steps.detik-install.outputs.installed }}
+    value: ${{ (steps.detik-install.outputs.installed == 'true') }}
   file-installed:
     description: "True/False if bats-file has been installed"
-    value: ${{ steps.file-install.outputs.installed }}
+    value: ${{ (steps.file-install.outputs.installed == 'true') }}
 
 runs:
   using: composite
@@ -117,7 +117,7 @@ runs:
       id: bats-install
       shell: bash
       run: |
-        # In $HOME to avoid sudo requirements that eventually will be removed for the library as well
+        # In $HOME to avoid sudo requirements
         VERSION=${{ inputs.bats-version }}
         DESTDIR="$HOME/.local/bin"
         LIBDIR="$HOME/.local/share/bats"

@@ -63,6 +63,16 @@ For example, if you want to install `bats-support` in the `./test/bats-support` 
 | file-path        | `/usr/lib/bats-file` | false | Bats-file path   |
 | file-clean       | `true`    | false    | Bats-file: clean temp files                     |
 
+## Outputs
+
+| Key              | Description                                    |
+|------------------|------------------------------------------------|
+| bats-installed   | True/False if bats has been installed          |
+| support-installed| True/False if bats-support has been installed  |
+| assert-installed | True/False if bats-asssert has been installed  |
+| detik-installed  | True/False if bats-detik has been installed    |
+| file-installed   | True/False if bats-file has been installed     |
+
 ## TODO
 
 * [X] Add more tests
@@ -73,6 +83,6 @@ For example, if you want to install `bats-support` in the `./test/bats-support` 
 
 * [X] Better Readme
 
-* [ ] Remove sudo in case of bats libs installed in $HOME
+* [x] Remove sudo in case of bats libs installed in $HOME
 
-* [ ] Add cache for bats libs
+* [x] Add cache for bats libs
