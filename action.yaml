@@ -84,19 +84,19 @@ inputs:
 outputs:
   bats-installed:
     description: "True/False if bats has been installed"
-    value: ${{ (steps.bats-install.outputs.installed == 'true') }}
+    value: ${{ (steps.bats-install.outputs.installed != '') }}
   support-installed:
     description: "True/False if bats-support has been installed"
-    value: ${{ (steps.support-install.outputs.installed == 'true') }}
+    value: ${{ (steps.support-install.outputs.installed != '') }}
   assert-installed:
     description: "True/False if bats-assert has been installed"
-    value: ${{ (steps.assert-install.outputs.installed == 'true') }}
+    value: ${{ (steps.assert-install.outputs.installed != '') }}
   detik-installed:
     description: "True/False if bats-detik has been installed"
-    value: ${{ (steps.detik-install.outputs.installed == 'true') }}
+    value: ${{ (steps.detik-install.outputs.installed != '') }}
   file-installed:
     description: "True/False if bats-file has been installed"
-    value: ${{ (steps.file-install.outputs.installed == 'true') }}
+    value: ${{ (steps.file-install.outputs.installed != '') }}
 
 runs:
   using: composite
@@ -285,3 +285,11 @@ runs:
         # Cleanup bats-support if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
         echo "installed=true" >> "$GITHUB_OUTPUT"
+    - name: "Debug print output"
+      shell: bash
+      run: |
+        echo "Bats installed: ${{ steps.bats-install.outputs.installed }}"
+        echo "Support installed: ${{ steps.support-install.outputs.installed }}"
+        echo "Assert installed: ${{ steps.assert-install.outputs.installed }}"
+        echo "Detik installed: ${{ steps.detik-install.outputs.installed }}"
+        echo "File installed ${{ steps.file-install.outputs.installed }}"
