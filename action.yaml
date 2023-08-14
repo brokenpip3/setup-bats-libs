@@ -291,4 +291,4 @@ runs:
         echo "Support installed: ${{ steps.support-install.outputs.support-installed }}"
         echo "Assert installed: ${{ steps.assert-install.outputs.assert-installed }}"
         echo "Detik installed: ${{ steps.detik-install.outputs.detik-installed }}"
-        echo "File installed: ${{ steps.file-install.outputs.file-installed }}"
+        echo "File installed: ${{ (steps.file-install.outputs.file-installed != '') }}"
