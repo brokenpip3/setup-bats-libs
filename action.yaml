@@ -164,7 +164,7 @@ runs:
         key: ${{ runner.os }}-bats-support-${{ inputs.support-version }}
 
     - name: "Download and install Bats-support"
-      if: inputs.support-install == 'true'&& steps.support-cache.outputs.cache-hit != 'true'
+      if: inputs.support-install == 'true' && steps.support-cache.outputs.cache-hit != 'true'
       id: support-install
       shell: bash
       run: |
@@ -186,7 +186,7 @@ runs:
         echo "Bats Support v$VERSION installed in $DESTDIR"
         # Cleanup bats-support if required
         [[ "${{ inputs.support-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-        echo "installed=true" >> "$GITHUB_OUTPUT"
+        echo "support-installed=true" >> $GITHUB_OUTPUT
 
     - name: "Set cache for Bats-assert"
       uses: actions/cache@v3
@@ -289,7 +289,7 @@ runs:
       shell: bash
       run: |
         echo "Bats installed: ${{ steps.bats-install.outputs.installed }}"
-        echo "Support installed: ${{ steps.support-install.outputs.installed }}"
+        echo "Support installed: ${{ steps.support-install.outputs.support-installed }}"
         echo "Assert installed: ${{ steps.assert-install.outputs.installed }}"
         echo "Detik installed: ${{ steps.detik-install.outputs.installed }}"
         echo "File installed ${{ steps.file-install.outputs.installed }}"
