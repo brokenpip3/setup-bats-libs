@@ -84,19 +84,19 @@ inputs:
 outputs:
   bats-installed:
     description: "True/False if bats has been installed"
-    value: ${{ (steps.bats-install.outputs.installed != '') }}
+    value: ${{ (steps.bats-install.outputs.bats-installed != '') }}
   support-installed:
     description: "True/False if bats-support has been installed"
-    value: ${{ (steps.support-install.outputs.installed != '') }}
+    value: ${{ (steps.support-install.outputs.support-installed != '') }}
   assert-installed:
     description: "True/False if bats-assert has been installed"
-    value: ${{ (steps.assert-install.outputs.installed != '') }}
+    value: ${{ (steps.assert-install.outputs.assert-installed != '') }}
   detik-installed:
     description: "True/False if bats-detik has been installed"
-    value: ${{ (steps.detik-install.outputs.installed != '') }}
+    value: ${{ (steps.detik-install.outputs.detik-installed != '') }}
   file-installed:
     description: "True/False if bats-file has been installed"
-    value: ${{ (steps.file-install.outputs.installed != '') }}
+    value: ${{ (steps.file-install.outputs.file-installed != '') }}
 
 runs:
   using: composite
@@ -151,7 +151,7 @@ runs:
 
         echo "Bats v$VERSION installed in $DESTDIR"
         echo "$DESTDIR" >> "$GITHUB_PATH"
-        echo "installed=true" >> $GITHUB_OUTPUT
+        echo "bats-installed=true" >> $GITHUB_OUTPUT
         rm -rf ${TEMPDIR} || exit 0
 
     - name: "Set cache for Bats-support"
@@ -216,7 +216,7 @@ runs:
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats Assert v$VERSION installed in $DESTDIR"
-        echo "installed=true" >> "$GITHUB_OUTPUT"
+        echo "assert-installed=true" >> "$GITHUB_OUTPUT"
         # Cleanup bats-support if required
         [[ "${{ inputs.assert-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
@@ -248,7 +248,7 @@ runs:
              ${DESTDIR}/$(basename $fn)
         done
         echo "Bats Detik v$VERSION installed in $DESTDIR"
-        echo "installed=true" >> "$GITHUB_OUTPUT"
+        echo "detik-installed=true" >> "$GITHUB_OUTPUT"
         # Cleanup bats-support if required
         [[ "${{ inputs.detik-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
 
@@ -281,14 +281,14 @@ runs:
              ${DESTDIR}/src/$(basename $fn)
         done
         echo "Bats File v$VERSION installed in $DESTDIR"
-        echo "installed=true" >> "$GITHUB_OUTPUT"
+        echo "file-installed=true" >> "$GITHUB_OUTPUT"
         # Cleanup bats-support if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
     - name: "Debug print output"
       shell: bash
       run: |
-        echo "Bats installed: ${{ steps.bats-install.outputs.installed }}"
+        echo "Bats installed: ${{ steps.bats-install.outputs.bats-installed }}"
         echo "Support installed: ${{ steps.support-install.outputs.support-installed }}"
-        echo "Assert installed: ${{ steps.assert-install.outputs.installed }}"
-        echo "Detik installed: ${{ steps.detik-install.outputs.installed }}"
-        echo "File installed ${{ steps.file-install.outputs.installed }}"
+        echo "Assert installed: ${{ steps.assert-install.outputs.assert-installed }}"
+        echo "Detik installed: ${{ steps.detik-install.outputs.detik-installed }}"
+        echo "File installed: ${{ steps.file-install.outputs.file-installed }}"
