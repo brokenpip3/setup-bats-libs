@@ -284,7 +284,9 @@ runs:
         echo "file-installed=true" >> "$GITHUB_OUTPUT"
         # Cleanup bats-support if required
         [[ "${{ inputs.file-clean }}" = "true"  ]] && rm -rf ${TEMPDIR} || exit 0
-    - name: "Debug print output"
+
+    - name: "Debug print if installed"
+      if: runner.debug == '1'
       shell: bash
       run: |
         echo "Bats installed: ${{ (steps.bats-install.outputs.bats-installed != '') }}"
