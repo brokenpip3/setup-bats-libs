@@ -40,6 +40,10 @@ For example, if you want to install `bats-support` in the `./test/bats-support` 
            support-path: ${{ github.workspace }}/test/bats-support
 ```
 
+## About Caching
+
+The caching mechanism for the `bats binary` is always available. However, the caching for the `bats libraries` is dependent on the location of each library path. If a library is located within the $HOME directory, caching is supported. Conversely, if a library is located outside the $HOME directory (which is the default location per each library), caching is not supported. This is due to a known limitation with sudo and the cache action, as detailed in this GitHub issue: https://github.com/actions/toolkit/issues/946.
+
 ## Inputs
 
 | Key              | Default | Required | Description                                    |
@@ -69,7 +73,7 @@ For example, if you want to install `bats-support` in the `./test/bats-support` 
 |------------------|------------------------------------------------|
 | bats-installed   | True/False if bats has been installed          |
 | support-installed| True/False if bats-support has been installed  |
-| assert-installed | True/False if bats-asssert has been installed  |
+| assert-installed | True/False if bats-assert has been installed   |
 | detik-installed  | True/False if bats-detik has been installed    |
 | file-installed   | True/False if bats-file has been installed     |
 
