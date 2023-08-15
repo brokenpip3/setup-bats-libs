@@ -1,0 +1,15 @@
+name: update-pre-commit-hooks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *"
+
+jobs:
+  components:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Update pre-commit hooks
+        uses: brokenpip3/action-pre-commit-update@main
