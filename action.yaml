@@ -112,6 +112,14 @@ runs:
           ~/.local/bin/bats
         key: ${{ runner.os }}-bats-${{ inputs.bats-version }}
 
+    - name: "Set PATH in case of cache-hit"
+      if: inputs.bats-install == 'true' && steps.bats-cache.outputs.cache-hit == 'true'
+      id: bats-cache-path
+      shell: bash
+      run: |
+        DESTDIR="$HOME/.local/bin"
+        echo "$DESTDIR" >> "$GITHUB_PATH"
+
     - name: "Download and install Bats"
       if: inputs.bats-install == 'true' && steps.bats-cache.outputs.cache-hit != 'true'
       id: bats-install
