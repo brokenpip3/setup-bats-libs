@@ -17,7 +17,7 @@ jobs:
     name: local default
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Bats and Bats libs
         id: setup-bats-libs
         uses: ./
@@ -66,7 +66,7 @@ jobs:
     name: local default cache
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Bats and Bats libs
         id: setup-bats-libs
         uses: ./
