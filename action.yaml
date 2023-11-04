@@ -55,7 +55,7 @@ inputs:
   detik-version:
     description: "Bats-detik version, default to latest"
     required: false
-    default: "1.2.0"
+    default: "1.2.1"
   detik-path:
     description: "Bats-detik path, default to /usr/lib/bats-detik"
     required: false
@@ -72,7 +72,7 @@ inputs:
   file-version:
     description: "Bats-file version, default to latest"
     required: false
-    default: "0.3.0"
+    default: "0.4.0"
   file-path:
     description: "Bats-file path, default to /usr/lib/bats-file"
     required: false
