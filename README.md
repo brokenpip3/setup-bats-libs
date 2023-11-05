@@ -22,7 +22,7 @@ jobs:
        - name: Checkout
          uses: actions/checkout@v2
        - name: Setup Bats and bats libs
-         uses: brokenpip3/setup-bats-libs@1.0.0
+         uses: brokenpip3/setup-bats-libs@1.5.2
 ```
 
 ## Libraries Path
@@ -59,11 +59,11 @@ The caching mechanism for the `bats binary` is always available. However, the ca
 | assert-path      | `/usr/lib/bats-assert` | false | Bats-assert path |
 | assert-clean     | `true`    | false    | Bats-assert: clean temp files                   |
 | detik-install    | `true`   | false    | Bats-detik installation        |
-| detik-version    | `1.2.0`   | false    | Bats-detik version        |
+| detik-version    | `1.2.1`   | false    | Bats-detik version        |
 | detik-path       | `/usr/lib/bats-detik` | false | Bats-detik path |
 | detik-clean      | `true`    | false    | Bats-detik: clean temp files                    |
 | file-install     | `true`    | false    | Bats-file installation     |
-| file-version     | `0.3.0`   | false    | Bats-file version            |
+| file-version     | `0.4.0`   | false    | Bats-file version            |
 | file-path        | `/usr/lib/bats-file` | false | Bats-file path   |
 | file-clean       | `true`    | false    | Bats-file: clean temp files                     |
 

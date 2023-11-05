@@ -23,7 +23,7 @@ setup() {
   run stat -c "%a" testing/example
   assert_success
   assert_output 644
-  assert_file_permission 644 /path/to/permission
+  assert_file_permission 644 testing/example
   assert_success
 }
 
