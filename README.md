@@ -1,5 +1,7 @@
 # Setup Bats and Bats libraries
 
+WARNING: this action is now under the bats-org umbrella and it's hosted [here](https://github.com/bats-core/bats-action). Please change your syntax to point to the new bats-org repo, this repo will be archived.
+
 This GitHub Action installs [Bats](https://github.com/bats-core/bats-core) and the four major bats libraries:
 
 * [bats-support](https://github.com/bats-core/bats-support)
